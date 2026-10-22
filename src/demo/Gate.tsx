@@ -1,5 +1,5 @@
 import { useState, type MouseEvent } from "react";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { Mark } from "../brand/Logo";
 import { Avatar } from "../brand/Avatar";
 import { ACTORS } from "./engine";
@@ -17,6 +17,12 @@ export function Gate({ liveReady, onLive, onMock, onStory }: {
   onStory: (iris: Iris) => void;
 }) {
   const [iris, setIris] = useState<Iris | null>(null);
+  const [sorry, setSorry] = useState(false);
+  const openSorry = () => {
+    unlockSfx();
+    setSorry(true);
+    window.setTimeout(() => play("pop"), 120);
+  };
 
   const go = (e: MouseEvent<HTMLButtonElement>, color: string, next: (i: Iris) => void) => {
     unlockSfx();
@@ -68,13 +74,11 @@ export function Gate({ liveReady, onLive, onMock, onStory }: {
           <motion.button
             className="gate-choice dark"
             data-sfx="tap"
-            onClick={(e) => go(e, "#000", onLive)}
-            disabled={!liveReady}
-            title={liveReady ? undefined : "Connect the local TideCloak realm first (docs/LIVE_TIDECLOAK.md)"}
+            onClick={(e) => (liveReady ? go(e, "#000", onLive) : openSorry())}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            whileHover={liveReady ? { y: -4 } : undefined}
-            whileTap={liveReady ? { scale: 0.96 } : undefined}
+            whileHover={{ y: -4 }}
+            whileTap={{ scale: 0.96 }}
             transition={{ type: "spring", stiffness: 380, damping: 26, delay: 0.7 }}
           >
             <span className="gate-icon"><Mark size={28} color="#fff" /></span>
@@ -100,11 +104,6 @@ export function Gate({ liveReady, onLive, onMock, onStory }: {
           </motion.button>
         </div>
 
-        {!liveReady && (
-          <motion.p className="gate-note" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.0 }}>
-            Live Tide sign-in is paused: on 22 Oct 2026 Tide's network could not enrol accounts (13–17 of 20 ORKs failing). The mock runs the same rules.
-          </motion.p>
-        )}
 
         <motion.button className="gate-story" data-sfx="tap" onClick={(e) => go(e, "#ffffff", onStory)} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.1 }}>
           <svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12-7.5z" fill="currentColor" /></svg>
@@ -112,6 +111,48 @@ export function Gate({ liveReady, onLive, onMock, onStory }: {
         </motion.button>
       </div>
 
+
+      <AnimatePresence>
+        {sorry && (
+          <motion.div className="sorry-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSorry(false)}>
+            <motion.div
+              className="sorry"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="sorry-title"
+              onClick={(e) => e.stopPropagation()}
+              initial={{ opacity: 0, scale: 0.85, y: 24 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.94, y: 10 }}
+              transition={{ type: "spring", stiffness: 420, damping: 26 }}
+            >
+              <div className="sorry-art">
+                <motion.span initial={{ rotate: -8, scale: 0.6 }} animate={{ rotate: 0, scale: 1 }} transition={{ type: "spring", stiffness: 300, damping: 14, delay: 0.1 }}>
+                  <Avatar id="linh" size={88} />
+                </motion.span>
+                <span className="sorry-mark"><Mark size={26} color="#fff" /></span>
+              </div>
+              <h2 id="sorry-title">Sorry, <em>not on this one.</em></h2>
+              <p>
+                We couldn't create a Tide account during the hackathon: Tide's network failed every enrolment
+                (13–17 of 20 ORKs not responding), so live sign-in can't run on this site.
+              </p>
+              <p>
+                To test with Tide, run the project from GitHub on your own machine. One command sets up TideCloak, the realm and the app.
+              </p>
+              <div className="sorry-actions">
+                <a className="btn lg" href="https://github.com/BennedictQuanTon/RMIT_SGS_GenData_C2#setup" target="_blank" rel="noreferrer">
+                  Open on GitHub <span className="arrow">→</span>
+                </a>
+                <button className="btn lg outline" data-sfx="tap" onClick={(e) => { setSorry(false); go(e, "#e2eeff", onMock); }}>
+                  Explore without an account
+                </button>
+              </div>
+              <button className="sorry-close" aria-label="Close" data-sfx="hide" onClick={() => setSorry(false)}>×</button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       {iris && (
         <div className="iris">
           <IrisDisc iris={iris} from={0} to={1} />

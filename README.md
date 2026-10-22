@@ -37,7 +37,7 @@ Open `/demo?story=1`: Linh's database holds only ciphertext; the school confirms
 
 <p align="center">
   <a href="public/video/unfound.mp4"><b>Watch the film</b></a> ·
-  <a href="#run-it"><b>Run it</b></a> ·
+  <a href="#setup"><b>Setup</b></a> ·
   <a href="#how-it-works"><b>How it works</b></a> ·
   <a href="#proof"><b>Proof</b></a> ·
   <a href="#team"><b>Team</b></a>
@@ -45,7 +45,7 @@ Open `/demo?story=1`: Linh's database holds only ciphertext; the school confirms
 
 ---
 
-> **Note for judges.** Live Tide sign-in could not be completed: on 22 Oct 2026 Tide's enclave failed to create the first account on every attempt ("Could not reach enough NEW ORKs", 13–17 of 20 ORKs failing). The TideCloak integration is in the code and the realm was provisioned and licensed; the film and the deploy run on the mock fabric. Evidence and details in [Run it](#run-it).
+> **Note for judges.** Live Tide sign-in could not be completed: on 22 Oct 2026 Tide's enclave failed to create the first account on every attempt ("Could not reach enough NEW ORKs", 13–17 of 20 ORKs failing). The TideCloak integration is in the code and the realm was provisioned and licensed; the film and the deploy run on the mock fabric. Evidence and details in [Setup](#setup).
 
 ## The film
 
@@ -102,7 +102,7 @@ Seven people, one address, no master key. `/demo` opens on a welcome screen: **W
 
 <sub>Sources accessed 22 October 2026. Programs and products change; check the cited pages for their current features.</sub>
 
-## Run it
+## Setup
 
 Requirements: Node.js 20+. Docker for the live TideCloak mode.
 

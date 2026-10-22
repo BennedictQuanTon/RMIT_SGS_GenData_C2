@@ -674,3 +674,16 @@ html.lenis, html.lenis body { height: auto; }
 .ref-date { color: var(--color-stone); font-size: 11px; }
 
 .gate-note { max-width: 560px; font-size: 13px !important; line-height: 1.5; color: var(--color-graphite); margin-top: 2px; }
+
+/* Apology popup for the Tide door while live sign-in is unavailable */
+.sorry-backdrop { position: fixed; inset: 0; z-index: 110; display: grid; place-items: center; padding: 20px; background: rgba(10, 14, 30, 0.38); backdrop-filter: blur(6px); }
+.sorry { position: relative; width: min(520px, 100%); display: grid; justify-items: center; gap: 14px; text-align: center; padding: 36px 32px 28px; border-radius: 24px; background: #fff; box-shadow: 0 40px 100px -40px rgba(10, 20, 60, 0.6); }
+.sorry-art { position: relative; margin-bottom: 4px; }
+.sorry-art img { box-shadow: 0 0 0 6px var(--color-periwinkle-wash); }
+.sorry-mark { position: absolute; right: -6px; bottom: -4px; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: #000; box-shadow: 0 0 0 4px #fff; }
+.sorry h2 { font-size: 34px; letter-spacing: -0.03em; }
+.sorry h2 em { font: italic 400 1em/1 "Instrument Serif", Georgia, serif; color: var(--color-lam); }
+.sorry p { font-size: 15px; line-height: 1.55; color: var(--color-graphite); max-width: 420px; }
+.sorry-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 6px; }
+.sorry-close { position: absolute; top: 12px; right: 14px; width: 36px; height: 36px; border: 0; border-radius: 50%; background: var(--color-fog); font-size: 22px; line-height: 1; cursor: pointer; color: var(--color-graphite); }
+.sorry-close:hover { background: var(--color-slate-mist); }
