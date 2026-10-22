@@ -44,6 +44,7 @@ export function Police() {
           <button
             className="btn"
             disabled={!sealed}
+            data-demo="breakglass"
             onClick={() => requestGrant({ target: "officer", tag: "addrfull", subject: LINH_ID, reason, oneTime: true })}
           >
             Request break-glass
@@ -55,7 +56,7 @@ export function Police() {
       {mine.length > 0 && (
         <div className="list">
           {mine.map((c) => (
-            <div key={c.id} className="stack" style={{ gap: 10 }}>
+            <div key={c.id} className="stack" data-demo="cr-officer" style={{ gap: 10 }}>
               <div className="row between">
                 <b className="mono">{c.id}</b>
                 <StatusBadge status={c.status} />
@@ -71,11 +72,11 @@ export function Police() {
         <motion.div className="notice seal" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.35, ease: ease.out }}>
           <b>Approved by quorum</b>
           <span style={{ fontSize: 14 }}>You can open this address once. The role is removed straight after.</span>
-          <div><button className="btn" onClick={view}>Open address (one time)</button></div>
+          <div><button className="btn" data-demo="open-once" onClick={view}>Open address (one time)</button></div>
         </motion.div>
       )}
       {address && (
-        <div className="sealed-field">
+        <div className="sealed-field" data-demo="revealed">
           <span className="eyebrow" style={{ background: "transparent", padding: 0 }}>Opened once · now revoked</span>
           <div className="reveal"><ScrambleIn text={address} /></div>
         </div>

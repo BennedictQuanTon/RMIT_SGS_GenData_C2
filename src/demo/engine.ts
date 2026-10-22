@@ -91,6 +91,11 @@ export interface DemoState {
 
 export const LINH_ID = "sv-001";
 
+// The landing page embeds the demo in an iframe (?embed). It keeps its own storage so it never
+// disturbs a demo the viewer is running in another tab.
+export const EMBED = typeof window !== "undefined" && new URLSearchParams(window.location.search).has("embed");
+export const storageKey = (base: string) => (EMBED ? `${base}-embed` : base);
+
 // Synthetic people and places. Any resemblance to real addresses is accidental.
 export const SEED_RECORDS: Omit<SurvivorRecord, "sealed">[] = [
   {

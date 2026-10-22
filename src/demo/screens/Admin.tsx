@@ -44,7 +44,7 @@ export function Admin() {
 
       <div className="tabs" role="tablist">
         {(["db", "roles"] as const).map((t) => (
-          <button key={t} role="tab" className="tab" data-sfx="switch" aria-selected={tab === t} onClick={() => setTab(t)}>
+          <button key={t} role="tab" className="tab" data-sfx="switch" data-demo={`tab-${t}`} aria-selected={tab === t} onClick={() => setTab(t)}>
             {t === "db" ? "Database" : "Roles"}
             {tab === t && <motion.span className="tab-line" layoutId="tab-dan" transition={{ type: "spring", stiffness: 520, damping: 40 }} />}
           </button>
@@ -55,12 +55,12 @@ export function Admin() {
         <div className="stack" style={{ gap: 16 }}>
           <div className="row between">
             <div className="row" role="group" aria-label="Which system">
-              <button className={`btn sm ${legacy ? "" : "outline"}`} data-sfx="switch" onClick={() => setLegacy(true)}>Legacy system</button>
-              <button className={`btn sm ${legacy ? "outline" : ""}`} data-sfx="switch" onClick={() => setLegacy(false)}>Unfound</button>
+              <button className={`btn sm ${legacy ? "" : "outline"}`} data-sfx="switch" data-demo="legacy" onClick={() => setLegacy(true)}>Legacy system</button>
+              <button className={`btn sm ${legacy ? "outline" : ""}`} data-sfx="switch" data-demo="unfound" onClick={() => setLegacy(false)}>Unfound</button>
             </div>
             <span className="muted" style={{ fontSize: 13 }}>{legacy ? "What an admin sees today" : "What Dan sees with Unfound"}</span>
           </div>
-          <div className="tablebox">
+          <div className="tablebox" data-demo="db-table">
             <table>
               <thead>
                 <tr>
@@ -106,7 +106,7 @@ export function Admin() {
               <input id="dan-reason" value={reason} onChange={(e) => setReason(e.target.value)} />
             </div>
             <div>
-              <button className="btn" onClick={() => requestGrant({ target: "dan", tag: "addrfull", subject: LINH_ID, reason })}>Assign role</button>
+              <button className="btn" data-demo="assign" onClick={() => requestGrant({ target: "dan", tag: "addrfull", subject: LINH_ID, reason })}>Assign role</button>
             </div>
             <span className="muted" style={{ fontSize: 13 }}>
               In TideCloak this write is not applied. It becomes a change set that needs {THRESHOLD} of 3 realm admins.
@@ -117,6 +117,7 @@ export function Admin() {
             {blocked && (
               <motion.div
                 key={blocked + state.log.length}
+                data-demo="blocked"
                 className="notice dark"
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0, x: [0, -8, 8, -5, 5, -2, 0] }}
@@ -132,7 +133,7 @@ export function Admin() {
           {mine.length > 0 && (
             <div className="list">
               {mine.map((c) => (
-                <div key={c.id} className="stack" style={{ gap: 10 }}>
+                <div key={c.id} className="stack" data-demo="cr-dan" style={{ gap: 10 }}>
                   <div className="row between">
                     <b className="mono">{c.id}</b>
                     <StatusBadge status={c.status} />
@@ -141,10 +142,10 @@ export function Admin() {
                   <Quorum cr={c} />
                   {c.status === "PENDING" && (
                     <div className="row">
-                      <button className="btn outline sm" onClick={() => approve(c.id)} disabled={c.approvals.includes("dan")}>
+                      <button className="btn outline sm" data-demo="authorize" onClick={() => approve(c.id)} disabled={c.approvals.includes("dan")}>
                         {c.approvals.includes("dan") ? "Authorized by you" : "Authorize (my vote)"}
                       </button>
-                      <button className="btn sm" onClick={() => tryCommit(c.id)}>Commit</button>
+                      <button className="btn sm" data-demo="commit" onClick={() => tryCommit(c.id)}>Commit</button>
                     </div>
                   )}
                 </div>

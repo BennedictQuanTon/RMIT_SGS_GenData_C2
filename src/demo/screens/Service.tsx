@@ -47,7 +47,7 @@ export function Service({ who }: { who: "school" | "gp" }) {
               </tr>
             </thead>
             <tbody>
-              {records.map((r) => {
+              {records.map((r, idx) => {
                 const kMine = `${r.id}:${mine}`;
                 const kFull = `${r.id}:addrfull`;
                 return (
@@ -58,21 +58,21 @@ export function Service({ who }: { who: "school" | "gp" }) {
                     </td>
                     <td>
                       {opened[kMine] ? (
-                        <span><ScrambleIn text={opened[kMine]} /> ✓</span>
+                        <span data-demo={`zone-${idx}`}><ScrambleIn text={opened[kMine]} /> ✓</span>
                       ) : (
-                        <button className="btn sm" onClick={() => tryOpen(r.id, mine)}>{who === "school" ? "Check zone" : "Show relay"}</button>
+                        <button className="btn sm" data-demo={`check-${idx}`} onClick={() => tryOpen(r.id, mine)}>{who === "school" ? "Check zone" : "Show relay"}</button>
                       )}
                     </td>
                     <td>
                       {denied[kFull] ? (
-                        <motion.div className="stack" style={{ gap: 4 }} initial={{ x: 0 }} animate={{ x: [0, -6, 6, -4, 4, 0] }} transition={{ duration: 0.4 }}>
+                        <motion.div className="stack" data-demo={`denied-${idx}`} style={{ gap: 4 }} initial={{ x: 0 }} animate={{ x: [0, -6, 6, -4, 4, 0] }} transition={{ duration: 0.4 }}>
                           <Badge kind="denied">Denied</Badge>
                           <span className="muted mono" style={{ fontSize: 12 }}>{denied[kFull]}</span>
                         </motion.div>
                       ) : (
                         <div className="row">
                           <Badge kind="sealed">Sealed</Badge>
-                          <button className="btn ghost sm" onClick={() => tryOpen(r.id, "addrfull")}>Try to open</button>
+                          <button className="btn ghost sm" data-demo={`open-${idx}`} onClick={() => tryOpen(r.id, "addrfull")}>Try to open</button>
                         </div>
                       )}
                     </td>

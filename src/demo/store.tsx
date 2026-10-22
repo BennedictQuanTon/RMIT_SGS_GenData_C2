@@ -11,10 +11,11 @@ import {
   type LogEvent,
   type Result,
   type Tag,
+  storageKey,
 } from "./engine";
 import { DeniedError, resetMockKeys, type Fabric } from "./fabric";
 
-const STATE_KEY = "unfound-demo-state-v1";
+const STATE_KEY = storageKey("unfound-demo-state-v1");
 
 function load(): DemoState {
   try {

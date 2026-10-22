@@ -32,7 +32,7 @@ Look for: Linh seals her address and the admin table shows only ciphertext; the 
 
 - Video: [`unfound-demo.mp4`](unfound-demo.mp4) (2 minutes)
 - Live site (mock fabric, no server needed): add your Vercel URL here
-- Landing page: `/` · Prototype: `/demo`
+- Landing page: `/` · Prototype: `/demo` · Guided end-to-end story with sound: `/demo?story=1`
 
 ## Setup
 
@@ -83,6 +83,6 @@ Font: the display face falls back to Geist. To match clutch.security exactly, li
 
 Recording the video with sound from the very first frame: browsers block audio before the first click. Launch Chrome with `--autoplay-policy=no-user-gesture-required`, or click once on the page before you start recording.
 
-Credits: UI sounds by Kenney (Interface Sounds, CC0). Motion: [motion](https://motion.dev) and [Lenis](https://lenis.darkroom.engineering).
+Credits: UI sounds by Kenney (Interface Sounds, CC0). People illustrations: Notionists by Zoish (CC0) via [DiceBear](https://www.dicebear.com). Icons: [Lucide](https://lucide.dev) (ISC) and [Simple Icons](https://simpleicons.org) (CC0). Motion: [motion](https://motion.dev) and [Lenis](https://lenis.darkroom.engineering).
 
 All people, addresses and records in this repository are synthetic.

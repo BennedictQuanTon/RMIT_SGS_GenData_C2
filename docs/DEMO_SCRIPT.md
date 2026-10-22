@@ -1,5 +1,7 @@
 # Demo script and video storyboard (2:00)
 
+**Fastest way to record:** open `/demo?story=1` (or press **Play the story** in the demo top bar). The app runs all eight scenes by itself in about 70 seconds: it switches persona and device (iPhone, MacBook, iPad), zooms onto each key feature, pops a callout with sound, and clicks the real buttons. Record the screen with sound on. The landing page's "How it works" section plays the same story inside a MacBook.
+
 Record at 1440×900 for desktop screens and 390×844 for Linh (phone). Press **Reset demo** before each take.
 
 ## Click path

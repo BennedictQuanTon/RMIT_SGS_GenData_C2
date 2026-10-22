@@ -54,7 +54,7 @@ export function Survivor() {
 
       <div className="tabs" role="tablist">
         {(["address", "shares", "looked"] as const).map((t) => (
-          <button key={t} role="tab" className="tab" data-sfx="switch" aria-selected={tab === t} onClick={() => setTab(t)}>
+          <button key={t} role="tab" className="tab" data-sfx="switch" data-demo={`tab-${t}`} aria-selected={tab === t} onClick={() => setTab(t)}>
             {t === "address" ? "Address" : t === "shares" ? "Shares" : `Who looked${timeline.length ? ` · ${timeline.length}` : ""}`}
             {tab === t && <motion.span className="tab-line" layoutId="tab-linh" transition={{ type: "spring", stiffness: 520, damping: 40 }} />}
           </button>
@@ -79,7 +79,7 @@ export function Survivor() {
               </div>
             ))}
             <p className="muted" style={{ fontSize: 13 }}>Example data. Each line becomes its own sealed part, so a service can be given one part without the others.</p>
-            <button className="btn" type="submit" disabled={busy}>{busy ? "Sealing…" : "Seal my address"}</button>
+            <button className="btn" type="submit" data-demo="seal" disabled={busy}>{busy ? "Sealing…" : "Seal my address"}</button>
           </form>
         ) : (
           <div className="stack">
@@ -136,7 +136,7 @@ export function Survivor() {
       )}
 
       {tab === "looked" && (
-        <div className="list">
+        <div className="list" data-demo="timeline">
           {timeline.length === 0 ? (
             <div className="muted">Nobody has asked for your address yet.</div>
           ) : (

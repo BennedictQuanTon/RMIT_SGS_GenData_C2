@@ -53,7 +53,7 @@ export function Quorum({ cr }: { cr: ChangeRequest }) {
 
 export function SealedField({ tag, ct, children }: { tag: Tag; ct?: string; children?: ReactNode }) {
   return (
-    <div className="sealed-field">
+    <div className="sealed-field" data-demo={`field-${tag}`}>
       <div className="row between">
         <b style={{ fontSize: 14 }}>{TAGS[tag].label}</b>
         <Badge kind="sealed">Sealed</Badge>
@@ -107,7 +107,7 @@ export function FabricLog({ log, mode }: { log: LogEvent[]; mode: "mock" | "live
     <motion.aside className="log" aria-label="Fabric log" initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, ease: ease.out, delay: 0.5 }}>
       <div className="row between">
         <span className="eyebrow">Fabric log</span>
-        <Badge kind={mode === "live" ? "approved" : "neutral"}>{mode === "live" ? "Live TideCloak" : "Mock fabric"}</Badge>
+        {mode === "live" && <Badge kind="approved">Live TideCloak</Badge>}
       </div>
       <p className="muted" style={{ fontSize: 13 }}>Every Tide operation the app performs, newest first.</p>
       {log.length === 0 ? (

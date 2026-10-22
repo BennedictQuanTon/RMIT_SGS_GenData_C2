@@ -5,7 +5,7 @@
 //   with real AES-GCM, but the keys sit in this browser, so it proves the UX, not the security.
 
 import type { ActorId, Tag } from "./engine";
-import { role } from "./engine";
+import { role, storageKey } from "./engine";
 
 export interface EncryptItem { data: string; tags: Tag[] }
 export interface DecryptItem { encrypted: string; tags: Tag[] }
@@ -22,7 +22,7 @@ export class DeniedError extends Error {
   }
 }
 
-const KEY_STORE = "unfound-mock-fabric-keys";
+const KEY_STORE = storageKey("unfound-mock-fabric-keys");
 const keyCache = new Map<Tag, CryptoKey>();
 
 function loadJwks(): Record<string, JsonWebKey> {

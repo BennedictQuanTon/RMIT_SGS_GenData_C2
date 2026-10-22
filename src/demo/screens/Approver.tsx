@@ -22,7 +22,7 @@ export function Approver({ who }: { who: ActorId }) {
             const voted = c.approvals.includes(who) || c.denials.includes(who);
             const selfGrant = c.target === c.requestedBy;
             return (
-              <article key={c.id} className="card stack" style={{ gap: 14 }}>
+              <article key={c.id} className="card stack" data-demo={`card-${c.id}`} style={{ gap: 14 }}>
                 <div className="row between">
                   <b className="mono">{c.id}</b>
                   <StatusBadge status={c.status} />
@@ -42,8 +42,8 @@ export function Approver({ who }: { who: ActorId }) {
                 )}
                 <Quorum cr={c} />
                 <div className="row">
-                  <button className="btn" onClick={() => approve(c.id)} disabled={voted}>Approve</button>
-                  <button className="btn outline" onClick={() => deny(c.id)} disabled={voted}>Deny</button>
+                  <button className="btn" data-demo={`approve-${c.id}`} onClick={() => approve(c.id)} disabled={voted}>Approve</button>
+                  <button className="btn outline" data-demo={`deny-${c.id}`} onClick={() => deny(c.id)} disabled={voted}>Deny</button>
                   {voted && <span className="muted" style={{ fontSize: 13 }}>You voted {c.approvals.includes(who) ? "approve" : "deny"}.</span>}
                 </div>
               </article>
@@ -55,7 +55,7 @@ export function Approver({ who }: { who: ActorId }) {
       {closed.length > 0 && (
         <div className="stack">
           <span className="eyebrow">Closed</span>
-          <div className="list">
+          <div className="list" data-demo="closed">
             {closed.map((c) => (
               <div key={c.id} className="row between">
                 <span><b className="mono">{c.id}</b> <span className="muted">{c.role} → {actor(c.target).name}</span></span>

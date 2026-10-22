@@ -3,93 +3,39 @@ import { Link } from "react-router-dom";
 import { motion, useMotionValueEvent, useScroll, useSpring, useTransform } from "motion/react";
 import { Brand, Mark } from "../brand/Logo";
 import { BarChart, StackedColumns, UnitChart } from "./Charts";
+import { HeroScene } from "./HeroScene";
+import { Showcase } from "./Showcase";
+import { WhoSees } from "./WhoSees";
+import { Stack } from "./Stack";
+import { Prototype } from "./Prototype";
 import { CountUp, Reveal, ScrollWords, Words } from "../motion/primitives";
 import { Intro, introSeen } from "../motion/Intro";
 import { ease } from "../motion/tokens";
 
-function Orbit({ play }: { play: boolean }) {
-  // Services orbit the survivor. Each can reach her; none holds the point that locates her.
-  const cx = 280, cy = 180, rx = 220, ry = 130;
-  const tokens = [
-    { a: -90, t: "School", s: "zone only" },
-    { a: -18, t: "GP", s: "relay only" },
-    { a: 54, t: "Court mail", s: "at print" },
-    { a: 126, t: "Police", s: "2 of 3 approve" },
-    { a: 198, t: "Admin", s: "ciphertext" },
-  ].map((k) => ({ ...k, x: cx + rx * Math.cos((k.a * Math.PI) / 180), y: cy + ry * Math.sin((k.a * Math.PI) / 180) }));
-  const go = play ? "on" : "off";
-  return (
-    <svg className="orbit" viewBox="0 0 560 360" role="img" aria-label="Services orbit the survivor's sealed address: school, GP, court mail, police and admin">
-      <motion.ellipse
-        className="orbit-ring"
-        cx={cx} cy={cy} rx={rx} ry={ry}
-        fill="none" stroke="#dfdfdf" strokeWidth="1.5" strokeDasharray="4 6"
-        initial={{ opacity: 0 }}
-        animate={go === "on" ? { opacity: 1 } : undefined}
-        transition={{ duration: 1, delay: 0.5 }}
-      />
-      {tokens.map((k, i) => (
-        <motion.line
-          key={k.t + "l"} x1={cx} y1={cy} x2={k.x} y2={k.y} stroke="#e5e7eb" strokeWidth="1"
-          initial={{ pathLength: 0 }}
-          animate={go === "on" ? { pathLength: 1 } : undefined}
-          transition={{ duration: 0.7, ease: ease.out, delay: 0.75 + i * 0.07 }}
-        />
-      ))}
-      <motion.g
-        initial={{ scale: 0.6, opacity: 0 }}
-        animate={go === "on" ? { scale: 1, opacity: 1 } : undefined}
-        transition={{ type: "spring", stiffness: 260, damping: 22, delay: 0.45 }}
-        style={{ transformOrigin: `${cx}px ${cy}px` }}
-      >
-        <circle cx={cx} cy={cy} r="62" fill="#000" />
-        <g transform={`translate(${cx - 30} ${cy - 32}) scale(0.94)`}>
-          <path d="M16 60V28a16 16 0 0 1 32 0v32" fill="none" stroke="#fff" strokeWidth="9" />
-          <circle cx="32" cy="28" r="5.5" fill="#fff" />
-        </g>
-      </motion.g>
-      {tokens.map((k, i) => (
-        <motion.g
-          key={k.t}
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={go === "on" ? { opacity: 1, scale: 1 } : undefined}
-          transition={{ duration: 0.6, ease: ease.outExpo, delay: 0.9 + i * 0.08 }}
-          style={{ transformOrigin: `${k.x}px ${k.y}px` }}
-        >
-          <g className="float" style={{ animationDelay: `${i * -1.1}s` }}>
-            <circle cx={k.x} cy={k.y} r="40" fill="#fff" stroke="#dfdfdf" />
-            <text x={k.x} y={k.y - 2} textAnchor="middle" fontFamily="Inter, sans-serif" fontSize="13" fontWeight="500" fill="#000">{k.t}</text>
-            <text x={k.x} y={k.y + 14} textAnchor="middle" fontFamily="Inter, sans-serif" fontSize="10" fill="#6e6e6e">{k.s}</text>
-          </g>
-        </motion.g>
-      ))}
-    </svg>
-  );
-}
-
 // Clutch's hero move: the headline sits in light gray and one phrase at a time turns black.
+const PHRASES = ["Every school.", "Every clinic.", "No one finds you."];
+
 function HeroHeadline({ play, delay }: { play: boolean; delay: number }) {
-  const phrases = ["Be reached.", "Not found."];
   const [on, setOn] = useState(-1);
   useEffect(() => {
     if (!play) return;
-    let i = 0;
+    let i = PHRASES.length - 1;
     let iv = 0;
     const first = window.setTimeout(() => {
-      setOn(0);
+      setOn(i);
       iv = window.setInterval(() => {
-        i = (i + 1) % phrases.length;
+        i = (i + 1) % PHRASES.length;
         setOn(i);
-      }, 2400);
-    }, (delay + 0.7) * 1000);
+      }, 2200);
+    }, (delay + 0.8) * 1000);
     return () => {
       window.clearTimeout(first);
       window.clearInterval(iv);
     };
-  }, [play, delay, phrases.length]);
+  }, [play, delay]);
   return (
-    <h1 aria-label="Be reached. Not found.">
-      {phrases.map((p, i) => (
+    <h1 aria-label={PHRASES.join(" ")}>
+      {PHRASES.map((p, i) => (
         <span key={p} aria-hidden="true">
           <motion.span
             className={`phrase ${on === i ? "on" : ""}`}
@@ -100,7 +46,7 @@ function HeroHeadline({ play, delay }: { play: boolean; delay: number }) {
           >
             {p}
           </motion.span>
-          {i < phrases.length - 1 ? " " : null}
+          {i < PHRASES.length - 1 ? " " : null}
         </span>
       ))}
     </h1>
@@ -139,9 +85,9 @@ function Nav() {
 }
 
 const rise = (play: boolean, delay: number) => ({
-  initial: { opacity: 0, y: 16 },
-  animate: play ? { opacity: 1, y: 0 } : undefined,
-  transition: { duration: 0.8, ease: ease.out, delay },
+  initial: { opacity: 0, scale: 0.98 },
+  animate: play ? { opacity: 1, scale: 1 } : undefined,
+  transition: { duration: 0.7, ease: ease.out, delay },
 });
 
 export function Landing() {
@@ -149,11 +95,10 @@ export function Landing() {
   const [ready, setReady] = useState(!showIntro);
   const onIntroDone = useCallback(() => setReady(true), []);
 
-  // Hero parallax: the orbit sinks and the copy fades as you scroll away.
+  // Hero parallax: the scene sinks a little as you scroll away.
   const { scrollY } = useScroll();
-  const orbitY = useTransform(scrollY, [0, 700], [0, 110]);
-  const orbitScale = useTransform(scrollY, [0, 700], [1, 0.92]);
-  const copyOpacity = useTransform(scrollY, [0, 420], [1, 0.25]);
+  const sceneY = useTransform(scrollY, [0, 800], [0, 90]);
+  const copyOpacity = useTransform(scrollY, [0, 420], [1, 0.3]);
   const base = showIntro ? 0.15 : 0.35; // after a route change, wait for the curtain to lift
 
   return (
@@ -165,18 +110,18 @@ export function Landing() {
       <main>
         <section className="container hero">
           <motion.div className="hero-copy" style={{ opacity: copyOpacity }}>
-            <motion.span className="eyebrow" {...rise(ready, base)}>Built with TideCloak · RMIT Hackathon 2026</motion.span>
-            <HeroHeadline play={ready} delay={base + 0.05} />
-            <motion.p className="lede" {...rise(ready, base + 0.35)}>
-              A safe address for family-violence survivors. Schools, clinics and courts can reach you. No admin can find you.
+            <HeroHeadline play={ready} delay={base} />
+            <motion.p className="lede" {...rise(ready, base + 0.4)}>
+              A safe address for family-violence survivors.<br />
+              Services reach you. No admin can find you.
             </motion.p>
-            <motion.div className="hero-ctas" {...rise(ready, base + 0.45)}>
-              <Link to="/demo" className="btn lam lg" data-sfx="whoosh">Try the prototype</Link>
+            <motion.div className="hero-ctas" {...rise(ready, base + 0.5)}>
+              <Link to="/demo?story=1" className="btn lam lg" data-sfx="whoosh">Play the story</Link>
               <a href="#problem" className="btn outline lg">See the problem <span className="arrow">→</span></a>
             </motion.div>
           </motion.div>
-          <motion.div className="orbit-wrap" style={{ y: orbitY, scale: orbitScale }}>
-            <Orbit play={ready} />
+          <motion.div className="hero-scene-wrap" style={{ y: sceneY }}>
+            {ready && <HeroScene />}
           </motion.div>
         </section>
 
@@ -274,103 +219,10 @@ export function Landing() {
           </div>
         </section>
 
-        <section id="how" className="section">
-          <div className="container">
-            <div className="section-head">
-              <Reveal><span className="eyebrow">How it works</span></Reveal>
-              <h2><Words text="The address is *sealed* before it leaves the phone." /></h2>
-              <Reveal delay={0.15}>
-                <p>Unfound uses TideCloak's Emergent Authority: the power to open an address only exists when the right person, the right role and enough independent approvals line up.</p>
-              </Reveal>
-            </div>
-            <div className="steps">
-              {[
-                ["01", "Seal once", "The survivor types the new address. It is encrypted in the browser into three parts: full address, school zone and contact relay.", "TideCloak doEncrypt with tags. Our server stores ciphertext only."],
-                ["02", "Share the minimum", "Each service can open only its own part. The school sees \"in zone\". The clinic sees a relay number. Nobody else sees anything.", "_tide_<tag>.selfdecrypt roles, checked by Tide's network, not by our code."],
-                ["03", "No one alone", "Granting anyone the full address needs 2 of 3 independent approvers. An admin who tries to give themselves access is stopped by cryptography.", "Quorum-Enforced Governance. Threshold-signed changes, every vote logged."],
-              ].map(([n, h, p, t], i) => (
-                <Reveal className="step" key={n} delay={i * 0.1}>
-                  <span className="step-n">{n}</span>
-                  <h3>{h}</h3>
-                  <p>{p}</p>
-                  <p className="tide-line">{t}</p>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section id="who" className="section fog">
-          <div className="container">
-            <div className="section-head">
-              <Reveal><span className="eyebrow">Who sees what</span></Reveal>
-              <h2><Words text="Every service can *reach* her. None can *find* her." /></h2>
-            </div>
-            <Reveal className="tablebox">
-              <table>
-                <thead>
-                  <tr><th>Who</th><th>Today</th><th>With Unfound</th></tr>
-                </thead>
-                <tbody>
-                  {[
-                    ["School registrar", "Full address in the enrolment file", "\"In Footscray North zone ✓\""],
-                    ["GP clinic", "Address and phone", "Suburb and a relay number"],
-                    ["Court mail", "Address in a clerk's document", "Opened only when the label prints"],
-                    ["Police", "Search the database at any time", "Break-glass: 2 of 3 approve, one view, then revoked"],
-                    ["Admin, DBA, operator", "Everything", "Ciphertext. A self-grant stays pending"],
-                  ].map(([a, b, c], i) => (
-                    <motion.tr
-                      key={a}
-                      initial={{ opacity: 0, x: -12 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true, amount: 0.6 }}
-                      transition={{ duration: 0.6, ease: ease.out, delay: 0.1 + i * 0.06 }}
-                    >
-                      <td>{a}</td><td>{b}</td><td>{c}</td>
-                    </motion.tr>
-                  ))}
-                </tbody>
-              </table>
-            </Reveal>
-          </div>
-        </section>
-
-        <section id="prototype" className="section">
-          <div className="container split">
-            <div className="stack" style={{ gap: 24 }}>
-              <Reveal><span className="eyebrow">Prototype</span></Reveal>
-              <h2><Words text="Seven people. *One* *address.* No master key." /></h2>
-              <Reveal delay={0.1}>
-                <p className="muted">Switch between the survivor, the services, a rogue admin and the approvers. Every Tide operation appears in the Fabric log on the right of the demo.</p>
-              </Reveal>
-              <Reveal delay={0.2} className="row">
-                <Link to="/demo" className="btn lg" data-sfx="whoosh">Open demo <span className="arrow">→</span></Link>
-                <a className="btn outline lg" href="https://tide.org/tidecloak" target="_blank" rel="noreferrer">About TideCloak <span className="arrow">→</span></a>
-              </Reveal>
-            </div>
-            <div className="persona-list">
-              {[
-                ["LN", "Linh N.", "Survivor. Seals her new address on her phone."],
-                ["WP", "Westgate Primary", "Sees the school zone. The full address stays sealed."],
-                ["DK", "Dan K., IT admin", "Tries to grant himself access. Gets 412."],
-                ["MT", "Mai T. and Ruth A.", "Independent approvers. 2 of 3 required."],
-                ["CR", "Const. Reyes", "Welfare check. One approved view, then revoked."],
-              ].map(([i, n, d], k) => (
-                <motion.div
-                  className="persona-row"
-                  key={n}
-                  initial={{ opacity: 0, x: 24 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, amount: 0.5 }}
-                  transition={{ duration: 0.7, ease: ease.out, delay: k * 0.07 }}
-                >
-                  <span className="avatar">{i}</span>
-                  <div className="who"><b>{n}</b><span>{d}</span></div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
+        <Showcase />
+        <WhoSees />
+        <Stack />
+        <Prototype />
 
         <section className="section fog tall">
           <div className="container section-head" style={{ marginBottom: 0 }}>
