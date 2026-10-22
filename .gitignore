@@ -68,3 +68,6 @@ video/raw/
 
 # Local TideCloak data and realm kit (scripts/setup-local.sh)
 /.tide/
+
+# Tide agent pack (fetched from mcp.tide.org)
+.tide-pack/

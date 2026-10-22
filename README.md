@@ -136,6 +136,8 @@ Earlier licence attempts on the same day returned *"Midgard.FinalizeWallet: Not 
 
 If provisioning stops with `KEYGEN_FAILED` / "Not enough orks returned an ok response", Tide's network could not activate the licence at that moment. Wait a minute, set `TIDE_REALM` to a new name and rerun.
 
+**Built with Tide's MCP.** The repo declares Tide's MCP server in [`.mcp.json`](.mcp.json), so Claude Code picks it up when you open the project. We used `tide_hosting` to choose local vs hosted TideCloak and `tide_doctor` to check the integration: the DPoP relay page and `useDPoP` pass; only the adapter waits on an enrolled realm. Details: [`docs/TIDE_MCP.md`](docs/TIDE_MCP.md).
+
 **Deploy.** `npm run build` writes `dist/`. Vercel: import the repo, framework "Vite" (`vercel.json` handles routes). Netlify: drop `dist/` on app.netlify.com/drop (`public/_redirects` included).
 
 ## Project layout
@@ -148,8 +150,9 @@ src/film/          the film as a deterministic, frame-seekable page (/film)
 src/motion/        intro, page morph, smooth scroll, reveal primitives, Web Audio SFX
 scripts/           setup-local.sh: one-command local setup with TideCloak and Tide MCP
 tools/             tide-setup.mjs: wire a realm into the app (adapter + roles)
-DESIGN.md          design system the UI follows
-REPORT.md          research notes, numbers and sources
+docs/              DESIGN.md (design system), TIDE_MCP.md (how Tide's MCP was used),
+                   LIVE_TIDECLOAK.md, DEMO_SCRIPT.md, RESEARCH_NOTES_VI.md, assets/
+.mcp.json          Tide's MCP server for Claude Code (https://mcp.tide.org/mcp)
 ```
 
 ## Team

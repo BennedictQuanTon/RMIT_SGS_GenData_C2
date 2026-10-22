@@ -1,7 +1,7 @@
 // Live mode: the same demo, wired to a real TideCloak realm through @tidecloak/react.
 // Encrypt/decrypt run through Tide's network; role grants go through real QEA change sets.
 
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { TideCloakContextProvider, useTideCloak } from "@tidecloak/react";
 import { ACTORS, LINH_ID, role, type ActorId } from "./engine";
 import { DeniedError, type Fabric } from "./fabric";
@@ -14,8 +14,18 @@ function asString(x: unknown): string {
 }
 
 export function LiveRoot({ children }: { children: (props: { fabric: Fabric; current: ActorId; setCurrent: (id: ActorId) => void; live: LiveInfo }) => ReactNode }) {
+  // Load the exported adapter and turn DPoP on (sender-bound tokens; public/tide_dpop_auth.html is the
+  // relay page). "auto" binds tokens whenever the realm supports it, as Tide's realm template does.
+  const [config, setConfig] = useState<Record<string, unknown> | null>(null);
+  useEffect(() => {
+    fetch("/tidecloak.json", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((cfg) => setConfig({ ...cfg, useDPoP: { mode: "auto", alg: "ES256" } }))
+      .catch(() => setConfig(null));
+  }, []);
+  if (!config) return null;
   return (
-    <TideCloakContextProvider configUrl="/tidecloak.json">
+    <TideCloakContextProvider config={config}>
       <LiveBridge>{children}</LiveBridge>
     </TideCloakContextProvider>
   );

@@ -1,4 +1,4 @@
-// Motion tokens. Mirrors the Motion section of DESIGN.md.
+// Motion tokens. Mirrors the Motion section of docs/DESIGN.md.
 // Strong ease-out for anything the user triggers (instant feedback, soft landing);
 // ease-in-out only for things that move across the screen on their own (curtains, wipes).
 
