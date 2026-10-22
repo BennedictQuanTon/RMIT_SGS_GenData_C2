@@ -1,0 +1,61 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+.yarn/
+.npm/
+
+# Build output
+dist/
+dist-ssr/
+build/
+out/
+.vite/
+*.tsbuildinfo
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.local
+
+# TideCloak local config (generated per machine by the TideCloak initializer)
+public/tidecloak.json
+tidecloak.json
+!docs/tidecloak.example.json
+tidecloak-data/
+*.mv.db
+*.trace.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Testing and coverage
+coverage/
+.nyc_output/
+playwright-report/
+test-results/
+
+# Editors and OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Deploy tooling
+.vercel/
+.netlify/
+
+# Video working files (keep only the final unfound-demo.mp4 under 100 MB)
+video/raw/
+*.mov
+*.prproj
+*.aep
