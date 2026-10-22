@@ -6,7 +6,7 @@ import { mockFabric } from "./fabric";
 import { LiveRoot, type LiveInfo } from "./live";
 import { UnfoundProvider, useUnfound } from "./store";
 import { FabricLog } from "./ui";
-import { play, setMuted, unlockSfx, useMuted, type Sfx } from "../motion/sfx";
+import { play, setMuted, useMuted, whoosh, type Sfx } from "../motion/sfx";
 import { ease } from "../motion/tokens";
 import type { LogEvent } from "./engine";
 import { Admin } from "./screens/Admin";
@@ -42,19 +42,16 @@ function soundFor(e: LogEvent): Sfx | null {
 }
 
 function useDemoSounds(log: LogEvent[]) {
-  // Unlock audio on the first gesture, and give every button a tap.
+  // Arriving on the dashboard: the curtain lifts with a falling whoosh and a soft chime.
   useEffect(() => {
-    const down = (ev: PointerEvent) => {
-      unlockSfx();
-      const el = (ev.target as HTMLElement).closest<HTMLElement>("button, a");
-      if (!el || (el as HTMLButtonElement).disabled) return;
-      const kind = (el.dataset.sfx ?? "tap") as Sfx | "none";
-      if (kind !== "none") play(kind);
+    const t1 = window.setTimeout(() => whoosh("down", 0.6, 0.16), 60);
+    const t2 = window.setTimeout(() => play("chime"), 520);
+    return () => {
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
     };
-    window.addEventListener("pointerdown", down);
-    return () => window.removeEventListener("pointerdown", down);
   }, []);
-  // Then a semantic sound for each new Tide operation (newest only, so bursts stay clean).
+  // A semantic sound for each new Tide operation (newest only, so bursts stay clean).
   const last = useRef(log[0]?.id ?? 0);
   useEffect(() => {
     const top = log[0];
@@ -87,7 +84,7 @@ function Shell({ live }: { live?: LiveInfo }) {
     <div className="app">
       <motion.header className="topbar" initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.7, ease: ease.out, delay: 0.35 }}>
         <div className="topbar-inner">
-          <Brand />
+          <Brand to="/" sfx="whoosh" />
           <span className={`badge ${fabric.mode === "live" ? "approved" : "neutral"}`}>{fabric.mode === "live" ? "Live · TideCloak" : "Demo · mock fabric"}</span>
           <div className="spacer" />
           {live ? (

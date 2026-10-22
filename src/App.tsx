@@ -4,6 +4,7 @@ import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import { Landing } from "./landing/Landing";
 import { Curtain } from "./motion/Intro";
 import { SmoothScroll, scrollToTop } from "./motion/SmoothScroll";
+import { useGlobalSfx } from "./motion/sfx";
 
 // The demo (and the TideCloak SDK) loads in its own chunk, prefetched once the landing page is idle,
 // so the curtain never waits on the network.
@@ -36,6 +37,7 @@ function AnimatedRoutes() {
 }
 
 export function App() {
+  useGlobalSfx();
   useEffect(() => {
     const idle = (window as unknown as { requestIdleCallback?: (cb: () => void) => void }).requestIdleCallback ?? ((cb: () => void) => setTimeout(cb, 1500));
     idle(() => void loadDemo());

@@ -34,14 +34,15 @@ Black, white, greys and light blue. Nothing else.
 | Pewter | `#dfdfdf` | `--color-pewter` | Card edges, input outlines |
 | Stone | `#c9c9c9` | `--color-stone` | Context series in charts, disabled fills |
 | Graphite | `#6e6e6e` | `--color-graphite` | Secondary text, captions, sources |
-| Periwinkle Wash | `#d9e4ff` | `--color-periwinkle-wash` | **Seal surface**: protected fields, SEALED badges, highlighted chart track |
-| Seal Blue | `#8fadff` | `--color-seal` | **Unfound's touch**: the light-blue data colour. Highlight series in charts, the sealed-field stripe, unit-chart fills |
-| Electric Cobalt | `#004dff` | `--color-electric-cobalt` | One primary CTA per page ("Try the prototype"), focus rings. Never a chart colour |
+| Lam Wash | `#e2eeff` | `--color-periwinkle-wash` | **Seal surface**: protected fields, SEALED badges |
+| Lam Seal | `#8dbbff` | `--color-seal` | **Unfound's touch**: the light azure data colour. Highlight series in charts, the sealed-field stripe, unit-chart fills |
+| Lam | `#3d8bff` | `--color-lam` | One primary CTA per page ("Try the prototype"), focus rings. Lighter than Clutch's `#004dff` by request. Never a chart colour |
+| Rail | `#dfdfdf` | `--color-rail` | 0.5px vertical rails and section dividers (Clutch `border-gray-600`) |
 
 **Rules**
 - Charts use only Obsidian, Stone, Seal Blue and Slate Mist tracks. Light blue = the number we want you to remember.
 - Status uses form and words, not red/green. **SEALED** = Periwinkle badge with lock glyph. **DENIED** = Obsidian badge, white text. **PENDING** = outlined Obsidian badge. **APPROVED** = Seal Blue badge.
-- Electric Cobalt appears at most once per screen.
+- Lam appears at most once per screen.
 
 ---
 
@@ -49,11 +50,11 @@ Black, white, greys and light blue. Nothing else.
 
 | Role | Family | Clutch original | Weights |
 |------|--------|-----------------|---------|
-| Display / headings / eyebrows | **Space Grotesk** (Google Fonts) | PP Radio Grotesk (commercial; Space Grotesk is the substitute named in the Clutch reference) | 400, 500, 600 |
+| Display / headings / eyebrows | **PP Radio Grotesk** if the licensed file is in `public/fonts/PPRadioGrotesk-Variable.ttf`, otherwise **Geist** (Google Fonts) | PP Radio Grotesk (Pangram Pangram, commercial) | 400, 500, 600 |
 | UI / body | **Inter** (Google Fonts) | Inter | 400, 500, 700 |
 | Ciphertext and logs | `ui-monospace, SFMono-Regular, Menlo, monospace` (system, not loaded) | — | 400 |
 
-**Signature move (kept from Clutch):** mixed-weight headlines. Key words at 600, supporting words at 400, all Obsidian. Example: "Be **reached.** Not **found.**" Never bold a whole headline.
+**Signature move (measured on clutch.security):** every heading is set at weight 600. Emphasis comes from colour, not weight: the hero sits in Stone `#c9c9c9` and one phrase at a time turns Obsidian (300 ms ease-in-out, cycling every 2.4 s). "What changes" uses the same gray-to-black, driven by scroll.
 
 ### Type scale
 
@@ -66,7 +67,7 @@ Black, white, greys and light blue. Nothing else.
 | heading | 38px | 1.2 | -0.01em | `--text-heading` |
 | heading-lg | 56px | 1.1 | -0.01em | `--text-heading-lg` |
 | display | 68px (clamps to 40px on phones) | 1.1 | -0.01em | `--text-display` |
-| stat number | 56px Space Grotesk 500, tabular | 1.0 | -0.02em | `--text-stat` |
+| stat number | 56px display face 500, tabular | 1.0 | -0.02em | `--text-stat` |
 
 ---
 
@@ -82,11 +83,13 @@ Black, white, greys and light blue. Nothing else.
 
 ## Components
 
-**Nav header.** Canvas, sticky, no border until scrolled. Left: mark + `unfound` wordmark. Centre: Inter 14px links. Right: Filled Black "Open demo".
+**Nav header.** Canvas, sticky, hides on scroll down. Left: mark + wordmark. Centre: Inter 15px links separated by 1px Rail ticks, underline draws in on hover. Right: black "Open demo".
 
-**Buttons.** Filled Black (default) · Electric Cobalt (one per page) · Outlined (1px Obsidian, with →) · Ghost (text only). Inter 14px/500, padding 10px 20px, radius 6px.
+**Rails.** The content column is framed by 0.5px Rail lines left and right, and sections are separated by 0.5px Rail rules, as on clutch.security.
 
-**Eyebrow pill.** Fog fill, Graphite text, Space Grotesk 11px/500 uppercase 0.14em, radius 6px, padding 4px 10px.
+**Buttons (Clutch `button-primary`).** Black gradient `#191919 → #000`, shadow `0 2px 6px #00000029`, Inter 14px/500, -0.02em, radius 6px, height 38px (44px large), hover adds a 10% white overlay, arrows nudge 2px. Variants: Lam (one per page), Outlined (1px inset Obsidian), Ghost.
+
+**Eyebrow label.** Text only, no fill or box: display face 11px/500, uppercase, 0.16em tracking, Graphite (Clutch `label-text-s`).
 
 **Stat card (landing).** Canvas, 1px Slate Mist, 24px padding. Eyebrow with country flag code (AU / VN), stat number 56px, one-sentence claim, chart, source line in Graphite 12px.
 
@@ -150,7 +153,7 @@ References: Emil Kowalski (animations.dev: strong ease-out, sub-300ms UI feedbac
 
 **Choreography**
 - **Intro** (first visit per session, 1.25 s, click or key skips): the mark's arch draws itself, the dot springs in, "unfound" rises letter by letter, then the white sheet wipes up and the hero starts underneath.
-- **Hero**: headline words rise out of a mask (80 ms stagger), lede and CTAs follow, the orbit's spokes draw, the five service tokens pop in and then float on a 6 s loop. Scrolling sinks the orbit (parallax 0 → 110 px) and fades the copy.
+- **Hero**: the two phrases fade in from scale 0.98 (Clutch's entrance), then take turns turning black, lede and CTAs follow, the orbit's spokes draw, the five service tokens pop in and then float on a 6 s loop. Scrolling sinks the orbit (parallax 0 → 110 px) and fades the copy.
 - **Nav**: hides on scroll down, returns on scroll up. A 1 px Obsidian progress line tracks the page.
 - **Smooth scroll**: Lenis (lerp 0.12) on wheel; touch keeps native scrolling. Anchor links glide with a 72 px offset.
 - **Problem**: stat numbers count up; bars draw left to right with clip-path; the 100-square unit chart fills row by row; stacked columns grow police first, then the growing agencies.
@@ -166,7 +169,10 @@ Kenney "Interface Sounds" (CC0), converted to mono MP3, about 70 KB in total, in
 
 | Sound | Kenney source | Plays on |
 |-------|---------------|----------|
-| tap | click_002 | Any button press |
+| tap | click_002 | Any button or link press, on every page |
+| pop | pluck_002 | The intro's dot landing |
+| chime | bong_001 | Arriving on the dashboard |
+| whoosh | synthesised (band-passed noise sweep) | Curtain rising (up) and lifting (down), intro wipe |
 | switch | tick_002 | Persona, tab, Legacy/Unfound toggle |
 | seal | confirmation_002 | `doEncrypt` OK |
 | reveal / hide | maximize_004 / minimize_004 | `doDecrypt` OK, Hide |
@@ -191,11 +197,12 @@ The semantic sound follows the Fabric log, so every Tide operation can be follow
   --color-pewter: #dfdfdf;
   --color-stone: #c9c9c9;
   --color-graphite: #6e6e6e;
-  --color-periwinkle-wash: #d9e4ff;
-  --color-seal: #8fadff;
-  --color-electric-cobalt: #004dff;
+  --color-periwinkle-wash: #e2eeff;
+  --color-seal: #8dbbff;
+  --color-lam: #3d8bff;
+  --color-rail: #dfdfdf;
 
-  --font-display: 'Space Grotesk', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'PP Radio Grotesk', 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-ui: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
 

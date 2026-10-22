@@ -79,6 +79,10 @@ DESIGN.md         design system the UI follows
 REPORT.md         research, numbers and sources
 ```
 
+Font: the display face falls back to Geist. To match clutch.security exactly, license PP Radio Grotesk from Pangram Pangram and place `PPRadioGrotesk-Variable.ttf` in `public/fonts/`.
+
+Recording the video with sound from the very first frame: browsers block audio before the first click. Launch Chrome with `--autoplay-policy=no-user-gesture-required`, or click once on the page before you start recording.
+
 Credits: UI sounds by Kenney (Interface Sounds, CC0). Motion: [motion](https://motion.dev) and [Lenis](https://lenis.darkroom.engineering).
 
 All people, addresses and records in this repository are synthetic.

@@ -10,9 +10,9 @@ export function Mark({ size = 28, color = "currentColor", title }: { size?: numb
   );
 }
 
-export function Brand({ to = "/" }: { to?: string }) {
+export function Brand({ to = "/", sfx }: { to?: string; sfx?: string }) {
   return (
-    <Link to={to} className="brand" aria-label="Unfound home">
+    <Link to={to} className="brand" aria-label="Unfound home" data-sfx={sfx}>
       <Mark size={26} />
       <span className="brand-word">unfound</span>
     </Link>

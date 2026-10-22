@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, useMotionValueEvent, useScroll, useSpring, useTransform } from "motion/react";
 import { Brand, Mark } from "../brand/Logo";
@@ -67,6 +67,46 @@ function Orbit({ play }: { play: boolean }) {
   );
 }
 
+// Clutch's hero move: the headline sits in light gray and one phrase at a time turns black.
+function HeroHeadline({ play, delay }: { play: boolean; delay: number }) {
+  const phrases = ["Be reached.", "Not found."];
+  const [on, setOn] = useState(-1);
+  useEffect(() => {
+    if (!play) return;
+    let i = 0;
+    let iv = 0;
+    const first = window.setTimeout(() => {
+      setOn(0);
+      iv = window.setInterval(() => {
+        i = (i + 1) % phrases.length;
+        setOn(i);
+      }, 2400);
+    }, (delay + 0.7) * 1000);
+    return () => {
+      window.clearTimeout(first);
+      window.clearInterval(iv);
+    };
+  }, [play, delay, phrases.length]);
+  return (
+    <h1 aria-label="Be reached. Not found.">
+      {phrases.map((p, i) => (
+        <span key={p} aria-hidden="true">
+          <motion.span
+            className={`phrase ${on === i ? "on" : ""}`}
+            style={{ display: "inline-block" }}
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={play ? { opacity: 1, scale: 1 } : undefined}
+            transition={{ duration: 0.7, ease: ease.out, delay: delay + i * 0.12 }}
+          >
+            {p}
+          </motion.span>
+          {i < phrases.length - 1 ? " " : null}
+        </span>
+      ))}
+    </h1>
+  );
+}
+
 function Nav() {
   const { scrollY, scrollYProgress } = useScroll();
   const [hidden, setHidden] = useState(false);
@@ -86,12 +126,12 @@ function Nav() {
       <div className="container nav-inner">
         <Brand />
         <nav className="nav-links" aria-label="Sections">
-          <a href="#problem">Problem</a>
-          <a href="#how">How it works</a>
-          <a href="#who">Who sees what</a>
-          <a href="#prototype">Prototype</a>
+          <a href="#problem"><span>Problem</span></a>
+          <a href="#how"><span>How it works</span></a>
+          <a href="#who"><span>Who sees what</span></a>
+          <a href="#prototype"><span>Prototype</span></a>
         </nav>
-        <Link to="/demo" className="btn">Open demo</Link>
+        <Link to="/demo" className="btn" data-sfx="whoosh">Open demo</Link>
       </div>
       <motion.div className="progress" style={{ scaleX: progress }} />
     </motion.header>
@@ -121,20 +161,18 @@ export function Landing() {
       {showIntro && <Intro onDone={onIntroDone} />}
       <Nav />
 
+      <div className="rails">
       <main>
         <section className="container hero">
           <motion.div className="hero-copy" style={{ opacity: copyOpacity }}>
             <motion.span className="eyebrow" {...rise(ready, base)}>Built with TideCloak · RMIT Hackathon 2026</motion.span>
-            <h1>
-              <Words text="Be *reached.* Not *found.*" mode="mount" play={ready} delay={base + 0.05} stagger={0.08} />
-            </h1>
+            <HeroHeadline play={ready} delay={base + 0.05} />
             <motion.p className="lede" {...rise(ready, base + 0.35)}>
-              Unfound lets family-violence survivors enrol a child at school, see a GP and receive court mail after they move,
-              without their new address sitting readable in anyone's database. No admin, agency or operator can open it alone.
+              A safe address for family-violence survivors. Schools, clinics and courts can reach you. No admin can find you.
             </motion.p>
             <motion.div className="hero-ctas" {...rise(ready, base + 0.45)}>
-              <Link to="/demo" className="btn cobalt">Try the prototype</Link>
-              <a href="#problem" className="btn outline">See the problem →</a>
+              <Link to="/demo" className="btn lam lg" data-sfx="whoosh">Try the prototype</Link>
+              <a href="#problem" className="btn outline lg">See the problem <span className="arrow">→</span></a>
             </motion.div>
           </motion.div>
           <motion.div className="orbit-wrap" style={{ y: orbitY, scale: orbitScale }}>
@@ -306,8 +344,8 @@ export function Landing() {
                 <p className="muted">Switch between the survivor, the services, a rogue admin and the approvers. Every Tide operation appears in the Fabric log on the right of the demo.</p>
               </Reveal>
               <Reveal delay={0.2} className="row">
-                <Link to="/demo" className="btn">Open demo</Link>
-                <a className="btn outline" href="https://tide.org/tidecloak" target="_blank" rel="noreferrer">About TideCloak →</a>
+                <Link to="/demo" className="btn lg" data-sfx="whoosh">Open demo <span className="arrow">→</span></Link>
+                <a className="btn outline lg" href="https://tide.org/tidecloak" target="_blank" rel="noreferrer">About TideCloak <span className="arrow">→</span></a>
               </Reveal>
             </div>
             <div className="persona-list">
@@ -362,6 +400,7 @@ export function Landing() {
           </ol>
         </div>
       </footer>
+      </div>
     </>
   );
 }

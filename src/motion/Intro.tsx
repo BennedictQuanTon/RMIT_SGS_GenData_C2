@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { ease } from "./tokens";
 import { lenis } from "./SmoothScroll";
+import { play, tryAutoUnlock, whoosh } from "./sfx";
 
 const SEEN = "unfound-intro-seen";
 
@@ -17,6 +18,18 @@ export function introSeen(): boolean {
 // Click or any key skips it.
 export function Intro({ onDone }: { onDone: () => void }) {
   const [phase, setPhase] = useState<"draw" | "out" | "gone">("draw");
+
+  // Sound for the opening: soft air while the arch draws, a pop when the dot lands.
+  // Plays only if the browser allows audio before a click (see README for recording).
+  useEffect(() => {
+    let pop = 0;
+    tryAutoUnlock().then((ok) => {
+      if (!ok) return;
+      whoosh("up", 0.8, 0.08);
+      pop = window.setTimeout(() => play("pop"), 600);
+    });
+    return () => window.clearTimeout(pop);
+  }, []);
 
   useEffect(() => {
     // Listen for a skip only while the mark is drawing; afterwards clicks belong to the page.
@@ -41,6 +54,7 @@ export function Intro({ onDone }: { onDone: () => void }) {
       /* ignore */
     }
     onDone(); // start the hero while the curtain lifts, so the two overlap
+    whoosh("up", 0.85, 0.16);
     const t = setTimeout(() => {
       setPhase("gone");
       lenis?.start();

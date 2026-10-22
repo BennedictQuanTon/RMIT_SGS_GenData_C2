@@ -3,15 +3,15 @@ import { animate, motion, useInView, useReducedMotion, useScroll, useTransform, 
 import { ease } from "./tokens";
 
 // Fades and lifts its children into place the first time they scroll into view.
-export function Reveal({ children, delay = 0, y = 24, className, as = "div" }: { children: ReactNode; delay?: number; y?: number; className?: string; as?: "div" | "article" | "li" }) {
+export function Reveal({ children, delay = 0, y = 12, className, as = "div" }: { children: ReactNode; delay?: number; y?: number; className?: string; as?: "div" | "article" | "li" }) {
   const M = motion[as];
   return (
     <M
       className={className}
-      initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, y, scale: 0.98 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.8, ease: ease.out, delay }}
+      transition={{ duration: 0.7, ease: ease.out, delay }}
     >
       {children}
     </M>
@@ -20,28 +20,26 @@ export function Reveal({ children, delay = 0, y = 24, className, as = "div" }: {
 
 // Headline whose words rise out of a mask. "*word*" renders at weight 600.
 // mode "mount" plays when `play` turns true; mode "view" plays on scroll into view.
-export function Words({ text, mode = "view", play = true, delay = 0, stagger = 0.06, className }: { text: string; mode?: "mount" | "view"; play?: boolean; delay?: number; stagger?: number; className?: string }) {
+export function Words({ text, mode = "view", play = true, delay = 0, stagger = 0.035, className }: { text: string; mode?: "mount" | "view"; play?: boolean; delay?: number; stagger?: number; className?: string }) {
   const words = text.split(" ");
-  const ref = useRef<HTMLSpanElement>(null);
+  const ref = useRef<HTMLSpanElement>(null); // "*word*" markers are kept for copy, Clutch sets the whole heading at 600
   const inView = useInView(ref, { once: true, amount: 0.4 });
   const go = mode === "mount" ? play : inView;
   return (
     <span ref={ref} className={className} aria-label={text.replace(/\*/g, "")}>
       {words.map((w, i) => {
-        const bold = w.startsWith("*") && w.endsWith("*");
-        const label = bold ? w.slice(1, -1) : w;
+        const label = w.replace(/\*/g, "");
         return (
           <Fragment key={i}>
-            <span className="word" aria-hidden="true">
-              <motion.span
-                style={{ display: "inline-block", fontWeight: bold ? 600 : undefined }}
-                initial={{ y: "105%" }}
-                animate={go ? { y: "0%" } : undefined}
-                transition={{ duration: 0.9, ease: ease.outExpo, delay: delay + i * stagger }}
-              >
-                {label}
-              </motion.span>
-            </span>
+            <motion.span
+              aria-hidden="true"
+              style={{ display: "inline-block" }}
+              initial={{ opacity: 0, y: "0.18em", scale: 0.98 }}
+              animate={go ? { opacity: 1, y: "0em", scale: 1 } : undefined}
+              transition={{ duration: 0.7, ease: ease.out, delay: delay + i * stagger }}
+            >
+              {label}
+            </motion.span>
             {i < words.length - 1 ? " " : null}
           </Fragment>
         );
@@ -135,11 +133,11 @@ export function ScrollWords({ text, className }: { text: string; className?: str
 }
 
 function ScrollWord({ word, progress, range, last }: { word: string; progress: MotionValue<number>; range: [number, number]; last: boolean }) {
-  const opacity = useTransform(progress, range, [0.14, 1]);
-  const bold = word.startsWith("*") && word.endsWith("*");
+  // Clutch's gray-to-black: each word goes from Stone to Obsidian as it passes.
+  const color = useTransform(progress, range, ["#c9c9c9", "#000000"]);
   return (
     <span aria-hidden="true">
-      <motion.span style={{ opacity, fontWeight: bold ? 600 : undefined }}>{bold ? word.slice(1, -1) : word}</motion.span>
+      <motion.span style={{ color }}>{word.replace(/\*/g, "")}</motion.span>
       {last ? "" : " "}
     </span>
   );

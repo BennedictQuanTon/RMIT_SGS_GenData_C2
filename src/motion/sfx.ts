@@ -1,9 +1,9 @@
 // UI sound effects through Web Audio: buffers are decoded once and played with no latency.
 // Sounds: Kenney "Interface Sounds" (CC0), see public/sfx/LICENSE-kenney.txt.
 
-import { useSyncExternalStore } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 
-export type Sfx = "tap" | "switch" | "seal" | "denied" | "blocked" | "pending" | "approve" | "quorum" | "reveal" | "hide" | "enter";
+export type Sfx = "tap" | "switch" | "seal" | "denied" | "blocked" | "pending" | "approve" | "quorum" | "reveal" | "hide" | "enter" | "pop" | "chime";
 
 const VOLUME: Record<Sfx, number> = {
   tap: 0.35,
@@ -17,6 +17,8 @@ const VOLUME: Record<Sfx, number> = {
   reveal: 0.35,
   hide: 0.3,
   enter: 0.35,
+  pop: 0.55,
+  chime: 0.3,
 };
 
 const MUTE_KEY = "unfound-sfx-muted";
@@ -100,4 +102,67 @@ export function useMuted(): boolean {
     },
     () => muted,
   );
+}
+
+// Synthesised air: band-passed noise swept up (curtain rising) or down (curtain lifting).
+// No file needed, and it can be shaped to the exact length of the motion it accompanies.
+export function whoosh(direction: "up" | "down" = "up", seconds = 0.55, level = 0.22) {
+  if (muted || !ctx || !master) return;
+  const c = ctx;
+  const len = Math.floor(c.sampleRate * seconds);
+  const buf = c.createBuffer(1, len, c.sampleRate);
+  const data = buf.getChannelData(0);
+  for (let i = 0; i < len; i++) data[i] = Math.random() * 2 - 1;
+  const src = c.createBufferSource();
+  src.buffer = buf;
+  const band = c.createBiquadFilter();
+  band.type = "bandpass";
+  band.Q.value = 0.9;
+  const t = c.currentTime;
+  const [from, to] = direction === "up" ? [380, 2600] : [2400, 420];
+  band.frequency.setValueAtTime(from, t);
+  band.frequency.exponentialRampToValueAtTime(to, t + seconds);
+  const gain = c.createGain();
+  gain.gain.setValueAtTime(0.0001, t);
+  gain.gain.exponentialRampToValueAtTime(level, t + seconds * 0.45);
+  gain.gain.exponentialRampToValueAtTime(0.0001, t + seconds);
+  src.connect(band).connect(gain).connect(master);
+  src.start(t);
+  src.stop(t + seconds);
+}
+
+// Browsers keep audio locked until the first gesture. Chrome lifts that for sites you have
+// used before, so try once at load; if it stays locked, the first tap unlocks it.
+export function tryAutoUnlock(): Promise<boolean> {
+  const c = ensureContext();
+  if (!c) return Promise.resolve(false);
+  void load();
+  if (c.state === "running") return Promise.resolve(true);
+  return c.resume().then(
+    () => (c.state as AudioContextState) === "running",
+    () => false,
+  );
+}
+
+// One app-wide handler: unlock audio on the first gesture and give every button and link a sound.
+// data-sfx="none" silences an element, data-sfx="<name>" picks another sound, data-sfx="whoosh"
+// marks links that change page.
+export function useGlobalSfx() {
+  useEffect(() => {
+    const down = (ev: PointerEvent) => {
+      unlockSfx();
+      const el = (ev.target as HTMLElement).closest<HTMLElement>("button, a");
+      if (!el || (el as HTMLButtonElement).disabled) return;
+      const kind = el.dataset.sfx ?? "tap";
+      if (kind === "none") return;
+      if (kind === "whoosh") {
+        play("tap");
+        whoosh("up", 0.5);
+        return;
+      }
+      play(kind as Sfx);
+    };
+    window.addEventListener("pointerdown", down);
+    return () => window.removeEventListener("pointerdown", down);
+  }, []);
 }
