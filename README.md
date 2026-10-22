@@ -2,29 +2,29 @@
 
 ## Project overview
 
-_Unfound lets family-violence survivors use schools, clinics and courts after they move, without their new address ever being readable by any single employee, admin or operator._
+_Unfound lets family-violence survivors use schools, clinics and courts after moving, without their new address ever being readable by any single employee, admin or operator._
 
 Built with [TideCloak](https://tide.org/tidecloak?utm_source=github&utm_medium=readme&utm_campaign=unlocked).
 
 ### 1. Vision & originality
 
-A safe-address layer for public services. A survivor seals her new address once, on her phone. Each service gets only the part it needs: the school sees "in zone", the GP gets a relay number. Opening the full address, even in an emergency, needs two of three independent approvers.
+A safe-address layer for public services. A survivor seals her new address on her phone. Services receive only what they need: the school confirms "in zone", the GP receives a relay number. Revealing the full address, even in emergencies, requires quorum approval (2 of 3 independent approvers).
 
 ### 2. Trust constraint insight
 
-After leaving, the new address is the most dangerous data a survivor owns, and every service stores it in plain text. The threat is insiders: 2,215 misuse-of-information allegations in four years across seven Queensland agencies. In 2014 an officer passed a survivor's new address to her abuser. Permissions can't help: admins are the risk. Survivors stay away: 90.4% of Vietnamese women abused by husbands never seek formal help.
+The new address is a survivor's most critical data, yet public services store it in plain text. Insiders are the threat: 2,215 misuse allegations occurred across seven Queensland agencies in four years. Access controls fail because admins hold the keys. Consequently, 90.4% of abused Vietnamese women never seek formal help.
 
 ### 3. Value & impact
 
-1.5 million Australian women have experienced violence from a previous partner, and 866,700 moved out when it ended. With Unfound, Linh can enrol her son at a new school and see a GP in the same week. Agencies stop being the leak, and can prove it.
+1.5 million Australian women have suffered violence from a former partner; 866,700 moved out. Unfound enables survivors like Linh to safely enroll children and access healthcare without leaks, while agencies gain cryptographically verifiable compliance.
 
 ### 4. Why TideCloak matters
 
-Addresses are encrypted in the browser with TideCloak's tag-based E2EE (`doEncrypt`/`doDecrypt`). The server holds only ciphertext. Each part is a tag gated by a `_tide_<tag>.selfdecrypt` role that Tide's network checks. Every role grant passes Quorum-Enforced Governance: a lone admin's self-grant stays pending, and committing it returns `412 QUORUM_NOT_MET`.
+Addresses are encrypted client-side with TideCloak tag-based E2EE (`doEncrypt`/`doDecrypt`). Servers hold only ciphertext. Each tag requires a `_tide_<tag>.selfdecrypt` role verified by Tide's decentralized network. Role grants enforce Quorum-Enforced Governance: unilateral admin self-grants remain pending, and committing returns `412 QUORUM_NOT_MET`.
 
 ### 5. Prototype & storytelling
 
-Look for: Linh seals her address and the admin table shows only ciphertext; the school confirms the zone but is denied the street; Dan grants himself access and is blocked; a police welfare check is approved 2 of 3, opens once, then is revoked; Linh's "Who looked" timeline shows it all.
+Look for: Linh seals her address into ciphertext; the school verifies the zone but is denied street access; Dan's admin self-grant fails with `412`; a police welfare check requires 2-of-3 signatures, unlocks once, and auto-revokes; Linh's "Who looked" audit timeline tracks all actions.
 
 ---
 
@@ -37,7 +37,7 @@ Look for: Linh seals her address and the admin table shows only ciphertext; the 
 
 <p align="center">
   <a href="public/video/unfound.mp4"><b>Watch the film</b></a> ·
-  <a href="#run-it"><b>Run it</b></a> ·
+  <a href="#setup"><b>Setup & Run</b></a> ·
   <a href="#how-it-works"><b>How it works</b></a> ·
   <a href="#proof"><b>Proof</b></a> ·
   <a href="#team"><b>Team</b></a>
@@ -122,7 +122,8 @@ Measured on this build with automated headless-Chrome runs of the full story and
 
 <sub>Sources accessed 22 October 2026. Programs and products change; check the cited pages for their current features.</sub>
 
-## Run it
+<a id="run-it"></a>
+## Setup
 
 Requirements: Node.js 20+. Docker only for live mode.
 
