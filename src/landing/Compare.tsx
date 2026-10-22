@@ -94,6 +94,7 @@ export function Compare() {
         <p className="source" style={{ marginTop: 12 }}>
           <Cell m="yes" /> yes · <Cell m="part" /> partly or only in some places · <Cell m="no" /> no. Assessments are ours, from the public descriptions cited.
         </p>
+        <p className="source accessed">Sources accessed 22 October 2026. Programs and products change; check the cited pages for their current features.</p>
       </div>
     </section>
   );
@@ -126,12 +127,16 @@ export function References() {
             <Reveal><span className="eyebrow">References</span></Reveal>
             <h2 className="refs-title"><Words text="Sources." /></h2>
             <Reveal delay={0.1}><p>Statistics were checked against the primary documents where they were available.</p></Reveal>
+            <p className="source accessed">All links accessed 22 October 2026.</p>
           </div>
           <ol className="refs-list">
             {REFS.map((r) => (
               <li key={r.n} id={`ref-${r.n}`}>
                 <span className="ref-n">{String(r.n).padStart(2, "0")}</span>
-                <a href={r.url} target="_blank" rel="noreferrer">{r.text}</a>
+                <span>
+                  <a href={r.url} target="_blank" rel="noreferrer">{r.text}</a>
+                  <span className="ref-date"> Accessed 22 Oct 2026.</span>
+                </span>
               </li>
             ))}
           </ol>

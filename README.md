@@ -120,6 +120,8 @@ Measured on this build with automated headless-Chrome runs of the full story and
 
 ● yes · ◐ partly or only in some places · – no. Assessments are ours, from the public descriptions cited.
 
+<sub>Sources accessed 22 October 2026. Programs and products change; check the cited pages for their current features.</sub>
+
 ## Run it
 
 Requirements: Node.js 20+. Docker only for live mode.
@@ -171,6 +173,8 @@ REPORT.md          research notes, numbers and sources
 Team GenData · RMIT Hackathon 2026 · Challenge 2, UNLOCKED.
 
 ## References
+
+<sub>All links accessed 22 October 2026.</sub>
 
 1. ABS. [Personal Safety, Australia 2021–22: Partner violence](https://www.abs.gov.au/statistics/people/crime-and-justice/partner-violence/2021-22).
 2. CCC Queensland. [Operation Impala, Exhibit 95](https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Impala/Exhibits/Operation-Impala-Exhibit-95-Queensland-Police-Service-Complaints-and-Allegations-Data-Analysis.PDF).

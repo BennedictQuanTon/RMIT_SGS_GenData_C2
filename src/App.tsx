@@ -2,7 +2,7 @@ import { lazy, Suspense, useEffect, useState, type ReactNode } from "react";
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import { Landing } from "./landing/Landing";
-import { Curtain } from "./motion/Intro";
+import { Morph } from "./motion/Morph";
 import { SmoothScroll, scrollToTop } from "./motion/SmoothScroll";
 import { useGlobalSfx } from "./motion/sfx";
 
@@ -13,11 +13,10 @@ const Demo = lazy(() => loadDemo().then((m) => ({ default: m.Demo })));
 const FilmPage = lazy(() => import("./film/Film").then((m) => ({ default: m.Film })));
 
 function Page({ children }: { children: ReactNode }) {
-  // The page itself stays put; the curtain does the moving. Exit waits for the curtain to cover.
+  // The page itself stays put; the Morph sheet does the moving. Exit waits until the sheet covers it.
   return (
-    <motion.div initial={{ opacity: 1 }} animate={{ opacity: 1 }} exit={{ opacity: 1, transition: { duration: 0.5 } }}>
+    <motion.div initial={{ opacity: 1 }} animate={{ opacity: 1 }} exit={{ opacity: 1, transition: { duration: 0.7 } }}>
       <Suspense fallback={null}>{children}</Suspense>
-      <Curtain />
     </motion.div>
   );
 }
@@ -47,6 +46,7 @@ function AnimatedRoutes() {
   return (
     <>
     {boot && <BootCurtain />}
+    <Morph />
     <AnimatePresence mode="wait" initial={false} onExitComplete={scrollToTop}>
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Page><Landing /></Page>} />
