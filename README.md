@@ -73,8 +73,12 @@ Vercel: import the repo, framework "Vite", no settings needed (`vercel.json` han
 src/landing/      landing page and charts
 src/demo/         prototype: engine (state machine), fabric (mock + live), screens per persona
 src/demo/live.tsx TideCloak wiring: @tidecloak/react provider, doEncrypt/doDecrypt, AdminAPI change sets
+src/motion/       intro, route curtain, smooth scroll, reveal primitives, Web Audio SFX
+public/sfx/       Kenney Interface Sounds (CC0)
 DESIGN.md         design system the UI follows
 REPORT.md         research, numbers and sources
 ```
+
+Credits: UI sounds by Kenney (Interface Sounds, CC0). Motion: [motion](https://motion.dev) and [Lenis](https://lenis.darkroom.engineering).
 
 All people, addresses and records in this repository are synthetic.

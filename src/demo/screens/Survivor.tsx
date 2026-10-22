@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
+import { ScrambleIn } from "../../motion/primitives";
+import { ease } from "../../motion/tokens";
 import { actor, fmtTime, LINH_ID, LINH_NEW_ADDRESS, role, TAGS, type Tag } from "../engine";
 import { useUnfound } from "../store";
 import { Badge, describe, ScreenHead, SealedField, StatusBadge } from "../ui";
@@ -51,8 +54,9 @@ export function Survivor() {
 
       <div className="tabs" role="tablist">
         {(["address", "shares", "looked"] as const).map((t) => (
-          <button key={t} role="tab" className="tab" aria-selected={tab === t} onClick={() => setTab(t)}>
+          <button key={t} role="tab" className="tab" data-sfx="switch" aria-selected={tab === t} onClick={() => setTab(t)}>
             {t === "address" ? "Address" : t === "shares" ? "Shares" : `Who looked${timeline.length ? ` · ${timeline.length}` : ""}`}
+            {tab === t && <motion.span className="tab-line" layoutId="tab-linh" transition={{ type: "spring", stiffness: 520, damping: 40 }} />}
           </button>
         ))}
       </div>
@@ -81,9 +85,15 @@ export function Survivor() {
           <div className="stack">
             {(Object.keys(TAGS) as Tag[]).map((t) => (
               <SealedField key={t} tag={t} ct={rec.sealed[t]?.ct}>
-                {shown[t] && <div className="reveal">{shown[t]}</div>}
+                <AnimatePresence initial={false}>
+                  {shown[t] && (
+                    <motion.div className="reveal" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.25, ease: ease.out }}>
+                      <ScrambleIn text={shown[t]!} />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
                 <div>
-                  <button className="btn ghost sm" onClick={() => reveal(t)}>{shown[t] ? "Hide" : "Show to me"}</button>
+                  <button className="btn ghost sm" data-sfx={shown[t] ? "hide" : "tap"} onClick={() => reveal(t)}>{shown[t] ? "Hide" : "Show to me"}</button>
                 </div>
               </SealedField>
             ))}
@@ -130,8 +140,8 @@ export function Survivor() {
           {timeline.length === 0 ? (
             <div className="muted">Nobody has asked for your address yet.</div>
           ) : (
-            timeline.map((e) => (
-              <div key={e.id} className="row between" style={{ alignItems: "flex-start" }}>
+            timeline.map((e, i) => (
+              <motion.div key={e.id} className="row between" style={{ alignItems: "flex-start" }} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.4, ease: ease.out, delay: Math.min(i, 10) * 0.035 }}>
                 <div className="stack" style={{ gap: 2, minWidth: 0, flex: 1 }}>
                   <span>{describe(e)}</span>
                   <span className="muted" style={{ fontSize: 12 }}>{fmtTime(e.at)} · {actor(e.actor).title}</span>
@@ -139,7 +149,7 @@ export function Survivor() {
                 <Badge kind={e.result === "ok" ? "approved" : e.result === "denied" ? "denied" : "pending"}>
                   {e.result === "ok" ? "Done" : e.result === "denied" ? "Blocked" : "Pending"}
                 </Badge>
-              </div>
+              </motion.div>
             ))
           )}
         </div>

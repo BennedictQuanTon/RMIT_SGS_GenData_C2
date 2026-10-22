@@ -207,6 +207,22 @@ Lưu ý: bản brief HTML trước đây dùng Cover Blue và nét viền 2px. B
 
 ---
 
+## 7b. Motion và âm thanh
+
+Toàn bộ mô tả nằm trong DESIGN.md, mục Motion và Sound. Tóm tắt:
+
+- **Lần đầu vào trang:** logo tự vẽ nét, wordmark hiện từng chữ, sau đó lớp trắng quét lên để lộ hero. Click hoặc bấm phím để bỏ qua.
+- **Hero:** chữ trồi lên khỏi mặt nạ, orbit vẽ dần, các token nổi lơ lửng, có parallax khi cuộn.
+- **Cuộn trang:** cuộn mượt bằng Lenis; các con số đếm lên; biểu đồ vẽ dần; câu ở mục "What changes" sáng dần theo từng chữ khi cuộn.
+- **Chuyển trang:** màn đen kéo lên rồi hạ xuống, logo lóe ở giữa. Phần demo được tải trước khi landing rảnh, nên không phải chờ mạng.
+- **Demo:**
+  - Pill đen trượt giữa các persona; gạch dưới tab trượt theo.
+  - Ciphertext và plaintext giải mã dần từ ký tự ngẫu nhiên.
+  - Dòng mới trong Fabric log trượt vào, kèm một chớp màu xanh nhạt.
+  - Badge DENIED và thông báo 412 rung nhẹ.
+  - Mỗi thao tác Tide có âm thanh riêng (Kenney, CC0).
+- **Hiệu năng:** đo khi cuộn: p99 là 16,8ms, không rớt frame. JS của landing tách riêng khỏi demo và TideCloak SDK.
+
 ## 8. Video và deploy
 
 - Click path và storyboard 2 phút nằm trong `docs/DEMO_SCRIPT.md`.

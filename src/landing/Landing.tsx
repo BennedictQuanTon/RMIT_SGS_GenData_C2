@@ -1,9 +1,13 @@
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { Link } from "react-router-dom";
+import { motion, useMotionValueEvent, useScroll, useSpring, useTransform } from "motion/react";
 import { Brand, Mark } from "../brand/Logo";
 import { BarChart, StackedColumns, UnitChart } from "./Charts";
+import { CountUp, Reveal, ScrollWords, Words } from "../motion/primitives";
+import { Intro, introSeen } from "../motion/Intro";
+import { ease } from "../motion/tokens";
 
-function Orbit() {
+function Orbit({ play }: { play: boolean }) {
   // Services orbit the survivor. Each can reach her; none holds the point that locates her.
   const cx = 280, cy = 180, rx = 220, ry = 130;
   const tokens = [
@@ -13,85 +17,148 @@ function Orbit() {
     { a: 126, t: "Police", s: "2 of 3 approve" },
     { a: 198, t: "Admin", s: "ciphertext" },
   ].map((k) => ({ ...k, x: cx + rx * Math.cos((k.a * Math.PI) / 180), y: cy + ry * Math.sin((k.a * Math.PI) / 180) }));
+  const go = play ? "on" : "off";
   return (
     <svg className="orbit" viewBox="0 0 560 360" role="img" aria-label="Services orbit the survivor's sealed address: school, GP, court mail, police and admin">
-      <ellipse cx={cx} cy={cy} rx={rx} ry={ry} fill="none" stroke="#e5e7eb" strokeWidth="1.5" strokeDasharray="4 6" />
-      {tokens.map((k) => (
-        <line key={k.t + "l"} x1={cx} y1={cy} x2={k.x} y2={k.y} stroke="#e5e7eb" strokeWidth="1" />
+      <motion.ellipse
+        className="orbit-ring"
+        cx={cx} cy={cy} rx={rx} ry={ry}
+        fill="none" stroke="#dfdfdf" strokeWidth="1.5" strokeDasharray="4 6"
+        initial={{ opacity: 0 }}
+        animate={go === "on" ? { opacity: 1 } : undefined}
+        transition={{ duration: 1, delay: 0.5 }}
+      />
+      {tokens.map((k, i) => (
+        <motion.line
+          key={k.t + "l"} x1={cx} y1={cy} x2={k.x} y2={k.y} stroke="#e5e7eb" strokeWidth="1"
+          initial={{ pathLength: 0 }}
+          animate={go === "on" ? { pathLength: 1 } : undefined}
+          transition={{ duration: 0.7, ease: ease.out, delay: 0.75 + i * 0.07 }}
+        />
       ))}
-      <circle cx={cx} cy={cy} r="62" fill="#000" />
-      <g transform={`translate(${cx - 30} ${cy - 32}) scale(0.94)`}>
-        <path d="M16 60V28a16 16 0 0 1 32 0v32" fill="none" stroke="#fff" strokeWidth="9" />
-        <circle cx="32" cy="28" r="5.5" fill="#fff" />
-      </g>
-      {tokens.map((k) => (
-        <g key={k.t}>
-          <circle cx={k.x} cy={k.y} r="40" fill="#fff" stroke="#dfdfdf" />
-          <text x={k.x} y={k.y - 2} textAnchor="middle" fontFamily="Inter, sans-serif" fontSize="13" fontWeight="500" fill="#000">{k.t}</text>
-          <text x={k.x} y={k.y + 14} textAnchor="middle" fontFamily="Inter, sans-serif" fontSize="10" fill="#6e6e6e">{k.s}</text>
+      <motion.g
+        initial={{ scale: 0.6, opacity: 0 }}
+        animate={go === "on" ? { scale: 1, opacity: 1 } : undefined}
+        transition={{ type: "spring", stiffness: 260, damping: 22, delay: 0.45 }}
+        style={{ transformOrigin: `${cx}px ${cy}px` }}
+      >
+        <circle cx={cx} cy={cy} r="62" fill="#000" />
+        <g transform={`translate(${cx - 30} ${cy - 32}) scale(0.94)`}>
+          <path d="M16 60V28a16 16 0 0 1 32 0v32" fill="none" stroke="#fff" strokeWidth="9" />
+          <circle cx="32" cy="28" r="5.5" fill="#fff" />
         </g>
+      </motion.g>
+      {tokens.map((k, i) => (
+        <motion.g
+          key={k.t}
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={go === "on" ? { opacity: 1, scale: 1 } : undefined}
+          transition={{ duration: 0.6, ease: ease.outExpo, delay: 0.9 + i * 0.08 }}
+          style={{ transformOrigin: `${k.x}px ${k.y}px` }}
+        >
+          <g className="float" style={{ animationDelay: `${i * -1.1}s` }}>
+            <circle cx={k.x} cy={k.y} r="40" fill="#fff" stroke="#dfdfdf" />
+            <text x={k.x} y={k.y - 2} textAnchor="middle" fontFamily="Inter, sans-serif" fontSize="13" fontWeight="500" fill="#000">{k.t}</text>
+            <text x={k.x} y={k.y + 14} textAnchor="middle" fontFamily="Inter, sans-serif" fontSize="10" fill="#6e6e6e">{k.s}</text>
+          </g>
+        </motion.g>
       ))}
     </svg>
   );
 }
 
-export function Landing() {
+function Nav() {
+  const { scrollY, scrollYProgress } = useScroll();
+  const [hidden, setHidden] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  useEffect(() => {
-    const on = () => setScrolled(window.scrollY > 8);
-    window.addEventListener("scroll", on, { passive: true });
-    return () => window.removeEventListener("scroll", on);
-  }, []);
+  const progress = useSpring(scrollYProgress, { stiffness: 220, damping: 40, restDelta: 0.001 });
+  useMotionValueEvent(scrollY, "change", (y) => {
+    const prev = scrollY.getPrevious() ?? 0;
+    setScrolled(y > 8);
+    setHidden(y > 240 && y > prev + 2 ? true : y < prev - 2 ? false : hidden);
+  });
+  return (
+    <motion.header
+      className={`nav ${scrolled ? "scrolled" : ""}`}
+      animate={{ y: hidden ? "-100%" : "0%" }}
+      transition={{ duration: 0.35, ease: ease.out }}
+    >
+      <div className="container nav-inner">
+        <Brand />
+        <nav className="nav-links" aria-label="Sections">
+          <a href="#problem">Problem</a>
+          <a href="#how">How it works</a>
+          <a href="#who">Who sees what</a>
+          <a href="#prototype">Prototype</a>
+        </nav>
+        <Link to="/demo" className="btn">Open demo</Link>
+      </div>
+      <motion.div className="progress" style={{ scaleX: progress }} />
+    </motion.header>
+  );
+}
+
+const rise = (play: boolean, delay: number) => ({
+  initial: { opacity: 0, y: 16 },
+  animate: play ? { opacity: 1, y: 0 } : undefined,
+  transition: { duration: 0.8, ease: ease.out, delay },
+});
+
+export function Landing() {
+  const [showIntro] = useState(() => !introSeen());
+  const [ready, setReady] = useState(!showIntro);
+  const onIntroDone = useCallback(() => setReady(true), []);
+
+  // Hero parallax: the orbit sinks and the copy fades as you scroll away.
+  const { scrollY } = useScroll();
+  const orbitY = useTransform(scrollY, [0, 700], [0, 110]);
+  const orbitScale = useTransform(scrollY, [0, 700], [1, 0.92]);
+  const copyOpacity = useTransform(scrollY, [0, 420], [1, 0.25]);
+  const base = showIntro ? 0.15 : 0.35; // after a route change, wait for the curtain to lift
 
   return (
     <>
-      <header className={`nav ${scrolled ? "scrolled" : ""}`}>
-        <div className="container nav-inner">
-          <Brand />
-          <nav className="nav-links" aria-label="Sections">
-            <a href="#problem">Problem</a>
-            <a href="#how">How it works</a>
-            <a href="#who">Who sees what</a>
-            <a href="#prototype">Prototype</a>
-          </nav>
-          <Link to="/demo" className="btn">Open demo</Link>
-        </div>
-      </header>
+      {showIntro && <Intro onDone={onIntroDone} />}
+      <Nav />
 
       <main>
         <section className="container hero">
-          <span className="eyebrow">Built with TideCloak · RMIT Hackathon 2026</span>
-          <h1>
-            Be <b>reached.</b> Not <b>found.</b>
-          </h1>
-          <p className="lede">
-            Unfound lets family-violence survivors enrol a child at school, see a GP and receive court mail after they move,
-            without their new address sitting readable in anyone's database. No admin, agency or operator can open it alone.
-          </p>
-          <div className="hero-ctas">
-            <Link to="/demo" className="btn cobalt">Try the prototype</Link>
-            <a href="#problem" className="btn outline">See the problem →</a>
-          </div>
-          <Orbit />
+          <motion.div className="hero-copy" style={{ opacity: copyOpacity }}>
+            <motion.span className="eyebrow" {...rise(ready, base)}>Built with TideCloak · RMIT Hackathon 2026</motion.span>
+            <h1>
+              <Words text="Be *reached.* Not *found.*" mode="mount" play={ready} delay={base + 0.05} stagger={0.08} />
+            </h1>
+            <motion.p className="lede" {...rise(ready, base + 0.35)}>
+              Unfound lets family-violence survivors enrol a child at school, see a GP and receive court mail after they move,
+              without their new address sitting readable in anyone's database. No admin, agency or operator can open it alone.
+            </motion.p>
+            <motion.div className="hero-ctas" {...rise(ready, base + 0.45)}>
+              <Link to="/demo" className="btn cobalt">Try the prototype</Link>
+              <a href="#problem" className="btn outline">See the problem →</a>
+            </motion.div>
+          </motion.div>
+          <motion.div className="orbit-wrap" style={{ y: orbitY, scale: orbitScale }}>
+            <Orbit play={ready} />
+          </motion.div>
         </section>
 
         <section id="problem" className="section fog">
           <div className="container">
             <div className="section-head">
-              <span className="eyebrow">The problem</span>
-              <h2>
-                A new address is the <b>most dangerous data</b> a survivor owns.
-              </h2>
-              <p>
-                Leaving is when the risk peaks. Every service a survivor uses afterwards stores the new address in plain text,
-                readable by thousands of staff and every administrator. One lookup by one insider is enough.
-              </p>
+              <Reveal><span className="eyebrow">The problem</span></Reveal>
+              <h2><Words text="A new address is the *most* *dangerous* *data* a survivor owns." /></h2>
+              <Reveal delay={0.15}>
+                <p>
+                  Leaving is when the risk peaks. Every service a survivor uses afterwards stores the new address in plain text,
+                  readable by thousands of staff and every administrator. One lookup by one insider is enough.
+                </p>
+              </Reveal>
             </div>
 
             <div className="stats">
-              <article className="card stat">
+              <Reveal as="article" className="card stat" delay={0}>
                 <div className="stat-top"><span className="eyebrow">AU · Partner violence</span></div>
-                <div className="stat-num">1.5M</div>
+                <div className="stat-num"><CountUp value={1.5} decimals={1} suffix="M" /></div>
                 <p className="stat-claim">Australian women have experienced violence from a <b>previous</b> partner, about nine times more than from a current one. The threat is someone who no longer knows where you live.</p>
                 <BarChart
                   label="Share of Australian adults who experienced cohabiting partner violence since age 15"
@@ -104,11 +171,11 @@ export function Landing() {
                   ]}
                 />
                 <p className="source">ABS, Personal Safety Survey 2021–22, Partner violence.</p>
-              </article>
+              </Reveal>
 
-              <article className="card stat">
+              <Reveal as="article" className="card stat" delay={0.08}>
                 <div className="stat-top"><span className="eyebrow">AU · Leaving</span></div>
-                <div className="stat-num">64%</div>
+                <div className="stat-num"><CountUp value={64} suffix="%" /></div>
                 <p className="stat-claim">of those women moved out when the relationship ended: <b>866,700</b> new addresses that school, GP, bank and electoral records all ask for.</p>
                 <UnitChart on={64} label="64 of 100 squares filled: 64% moved out at final separation" />
                 <div className="legend">
@@ -116,11 +183,11 @@ export function Landing() {
                   <span><i style={{ background: "var(--color-slate-mist)" }} />Did not · 36%</span>
                 </div>
                 <p className="source">ABS, Personal Safety Survey 2021–22. Women who lived with a violent previous partner.</p>
-              </article>
+              </Reveal>
 
-              <article className="card stat">
+              <Reveal as="article" className="card stat" delay={0}>
                 <div className="stat-top"><span className="eyebrow">AU · Insiders</span></div>
-                <div className="stat-num">2,215</div>
+                <div className="stat-num"><CountUp value={2215} comma /></div>
                 <p className="stat-claim">allegations of misused confidential information in four years, across just seven Queensland agencies. Outside the police they grew <b>4.8×</b>, in health, schools and corrections.</p>
                 <StackedColumns
                   label="Misuse of confidential information allegations by financial year, Queensland, 2015/16 to 2018/19"
@@ -136,11 +203,11 @@ export function Landing() {
                   ]}
                 />
                 <p className="source">Crime and Corruption Commission QLD, Operation Impala, Exhibit 95 (2019).</p>
-              </article>
+              </Reveal>
 
-              <article className="card stat">
+              <Reveal as="article" className="card stat" delay={0.08}>
                 <div className="stat-top"><span className="eyebrow">VN · Silence</span></div>
-                <div className="stat-num">90.4%</div>
+                <div className="stat-num"><CountUp value={90.4} decimals={1} suffix="%" /></div>
                 <p className="stat-claim">of Vietnamese women abused physically or sexually by a husband never went to a formal service. Fear of stigma and further harassment was a main reason.</p>
                 <BarChart
                   label="National Study on Violence against Women in Viet Nam 2019"
@@ -153,18 +220,18 @@ export function Landing() {
                   ]}
                 />
                 <p className="source">MOLISA, GSO, UNFPA and DFAT, National Study on Violence against Women in Viet Nam 2019.</p>
-              </article>
+              </Reveal>
             </div>
 
             <div className="cases">
-              <div className="case">
+              <Reveal className="case">
                 <span className="eyebrow">Queensland · 2014</span>
                 <p>A senior constable searched the police database and passed a survivor's new address to her abuser, his friend. A tribunal found the police service liable for failing to control access.</p>
-              </div>
-              <div className="case">
+              </Reveal>
+              <Reveal className="case" delay={0.1}>
                 <span className="eyebrow">Queensland · 2024</span>
                 <p>The same system auto-filled survivors' addresses into forms served on offenders. The Information Commissioner found police had known the risk "since at least 2017".</p>
-              </div>
+              </Reveal>
             </div>
           </div>
         </section>
@@ -172,31 +239,25 @@ export function Landing() {
         <section id="how" className="section">
           <div className="container">
             <div className="section-head">
-              <span className="eyebrow">How it works</span>
-              <h2>
-                The address is <b>sealed</b> before it leaves the phone.
-              </h2>
-              <p>Unfound uses TideCloak's Emergent Authority: the power to open an address only exists when the right person, the right role and enough independent approvals line up.</p>
+              <Reveal><span className="eyebrow">How it works</span></Reveal>
+              <h2><Words text="The address is *sealed* before it leaves the phone." /></h2>
+              <Reveal delay={0.15}>
+                <p>Unfound uses TideCloak's Emergent Authority: the power to open an address only exists when the right person, the right role and enough independent approvals line up.</p>
+              </Reveal>
             </div>
             <div className="steps">
-              <div className="step">
-                <span className="step-n">01</span>
-                <h3>Seal once</h3>
-                <p>The survivor types the new address. It is encrypted in the browser into three parts: full address, school zone and contact relay.</p>
-                <p className="tide-line">TideCloak doEncrypt with tags. Our server stores ciphertext only.</p>
-              </div>
-              <div className="step">
-                <span className="step-n">02</span>
-                <h3>Share the minimum</h3>
-                <p>Each service can open only its own part. The school sees "in zone". The clinic sees a relay number. Nobody else sees anything.</p>
-                <p className="tide-line">_tide_&lt;tag&gt;.selfdecrypt roles, checked by Tide's network, not by our code.</p>
-              </div>
-              <div className="step">
-                <span className="step-n">03</span>
-                <h3>No one alone</h3>
-                <p>Granting anyone the full address needs 2 of 3 independent approvers. An admin who tries to give themselves access is stopped by cryptography.</p>
-                <p className="tide-line">Quorum-Enforced Governance. Threshold-signed changes, every vote logged.</p>
-              </div>
+              {[
+                ["01", "Seal once", "The survivor types the new address. It is encrypted in the browser into three parts: full address, school zone and contact relay.", "TideCloak doEncrypt with tags. Our server stores ciphertext only."],
+                ["02", "Share the minimum", "Each service can open only its own part. The school sees \"in zone\". The clinic sees a relay number. Nobody else sees anything.", "_tide_<tag>.selfdecrypt roles, checked by Tide's network, not by our code."],
+                ["03", "No one alone", "Granting anyone the full address needs 2 of 3 independent approvers. An admin who tries to give themselves access is stopped by cryptography.", "Quorum-Enforced Governance. Threshold-signed changes, every vote logged."],
+              ].map(([n, h, p, t], i) => (
+                <Reveal className="step" key={n} delay={i * 0.1}>
+                  <span className="step-n">{n}</span>
+                  <h3>{h}</h3>
+                  <p>{p}</p>
+                  <p className="tide-line">{t}</p>
+                </Reveal>
+              ))}
             </div>
           </div>
         </section>
@@ -204,40 +265,50 @@ export function Landing() {
         <section id="who" className="section fog">
           <div className="container">
             <div className="section-head">
-              <span className="eyebrow">Who sees what</span>
-              <h2>
-                Every service can <b>reach</b> her. None can <b>find</b> her.
-              </h2>
+              <Reveal><span className="eyebrow">Who sees what</span></Reveal>
+              <h2><Words text="Every service can *reach* her. None can *find* her." /></h2>
             </div>
-            <div className="tablebox">
+            <Reveal className="tablebox">
               <table>
                 <thead>
                   <tr><th>Who</th><th>Today</th><th>With Unfound</th></tr>
                 </thead>
                 <tbody>
-                  <tr><td>School registrar</td><td>Full address in the enrolment file</td><td>"In Footscray North zone ✓"</td></tr>
-                  <tr><td>GP clinic</td><td>Address and phone</td><td>Suburb and a relay number</td></tr>
-                  <tr><td>Court mail</td><td>Address in a clerk's document</td><td>Opened only when the label prints</td></tr>
-                  <tr><td>Police</td><td>Search the database at any time</td><td>Break-glass: 2 of 3 approve, one view, then revoked</td></tr>
-                  <tr><td>Admin, DBA, operator</td><td>Everything</td><td>Ciphertext. A self-grant stays pending</td></tr>
+                  {[
+                    ["School registrar", "Full address in the enrolment file", "\"In Footscray North zone ✓\""],
+                    ["GP clinic", "Address and phone", "Suburb and a relay number"],
+                    ["Court mail", "Address in a clerk's document", "Opened only when the label prints"],
+                    ["Police", "Search the database at any time", "Break-glass: 2 of 3 approve, one view, then revoked"],
+                    ["Admin, DBA, operator", "Everything", "Ciphertext. A self-grant stays pending"],
+                  ].map(([a, b, c], i) => (
+                    <motion.tr
+                      key={a}
+                      initial={{ opacity: 0, x: -12 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true, amount: 0.6 }}
+                      transition={{ duration: 0.6, ease: ease.out, delay: 0.1 + i * 0.06 }}
+                    >
+                      <td>{a}</td><td>{b}</td><td>{c}</td>
+                    </motion.tr>
+                  ))}
                 </tbody>
               </table>
-            </div>
+            </Reveal>
           </div>
         </section>
 
         <section id="prototype" className="section">
           <div className="container split">
             <div className="stack" style={{ gap: 24 }}>
-              <span className="eyebrow">Prototype</span>
-              <h2>
-                Seven people. <b>One address.</b> No master key.
-              </h2>
-              <p className="muted">Switch between the survivor, the services, a rogue admin and the approvers. Every Tide operation appears in the Fabric log on the right of the demo.</p>
-              <div className="row">
+              <Reveal><span className="eyebrow">Prototype</span></Reveal>
+              <h2><Words text="Seven people. *One* *address.* No master key." /></h2>
+              <Reveal delay={0.1}>
+                <p className="muted">Switch between the survivor, the services, a rogue admin and the approvers. Every Tide operation appears in the Fabric log on the right of the demo.</p>
+              </Reveal>
+              <Reveal delay={0.2} className="row">
                 <Link to="/demo" className="btn">Open demo</Link>
                 <a className="btn outline" href="https://tide.org/tidecloak" target="_blank" rel="noreferrer">About TideCloak →</a>
-              </div>
+              </Reveal>
             </div>
             <div className="persona-list">
               {[
@@ -246,23 +317,30 @@ export function Landing() {
                 ["DK", "Dan K., IT admin", "Tries to grant himself access. Gets 412."],
                 ["MT", "Mai T. and Ruth A.", "Independent approvers. 2 of 3 required."],
                 ["CR", "Const. Reyes", "Welfare check. One approved view, then revoked."],
-              ].map(([i, n, d]) => (
-                <div className="persona-row" key={n}>
+              ].map(([i, n, d], k) => (
+                <motion.div
+                  className="persona-row"
+                  key={n}
+                  initial={{ opacity: 0, x: 24 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, amount: 0.5 }}
+                  transition={{ duration: 0.7, ease: ease.out, delay: k * 0.07 }}
+                >
                   <span className="avatar">{i}</span>
                   <div className="who"><b>{n}</b><span>{d}</span></div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
         </section>
 
-        <section className="section fog">
+        <section className="section fog tall">
           <div className="container section-head" style={{ marginBottom: 0 }}>
-            <span className="eyebrow">What changes</span>
-            <h2>
-              Survivors stop choosing between <b>help</b> and <b>hiding.</b>
-            </h2>
-            <p>Services stop being the leak. Agencies can prove that no single employee, including their own admins, can reveal where someone lives.</p>
+            <Reveal><span className="eyebrow">What changes</span></Reveal>
+            <ScrollWords text="Survivors stop choosing between *help* and *hiding.* Services stop being the leak." />
+            <Reveal delay={0.1}>
+              <p>Agencies can prove that no single employee, including their own admins, can reveal where someone lives.</p>
+            </Reveal>
           </div>
         </section>
       </main>

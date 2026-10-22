@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { motion } from "motion/react";
+import { ScrambleIn } from "../../motion/primitives";
 import { actor, TAGS, type Tag } from "../engine";
 import { useUnfound } from "../store";
 import { Badge, ScreenHead } from "../ui";
@@ -56,17 +58,17 @@ export function Service({ who }: { who: "school" | "gp" }) {
                     </td>
                     <td>
                       {opened[kMine] ? (
-                        <span>{opened[kMine]} ✓</span>
+                        <span><ScrambleIn text={opened[kMine]} /> ✓</span>
                       ) : (
                         <button className="btn sm" onClick={() => tryOpen(r.id, mine)}>{who === "school" ? "Check zone" : "Show relay"}</button>
                       )}
                     </td>
                     <td>
                       {denied[kFull] ? (
-                        <div className="stack" style={{ gap: 4 }}>
+                        <motion.div className="stack" style={{ gap: 4 }} initial={{ x: 0 }} animate={{ x: [0, -6, 6, -4, 4, 0] }} transition={{ duration: 0.4 }}>
                           <Badge kind="denied">Denied</Badge>
                           <span className="muted mono" style={{ fontSize: 12 }}>{denied[kFull]}</span>
-                        </div>
+                        </motion.div>
                       ) : (
                         <div className="row">
                           <Badge kind="sealed">Sealed</Badge>

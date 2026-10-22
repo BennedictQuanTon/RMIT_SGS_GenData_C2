@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { motion } from "motion/react";
+import { ScrambleIn } from "../../motion/primitives";
+import { ease } from "../../motion/tokens";
 import { LINH_ID, role } from "../engine";
 import { useUnfound } from "../store";
 import { Quorum, ScreenHead, StatusBadge } from "../ui";
@@ -65,16 +68,16 @@ export function Police() {
       )}
 
       {canOpen && !address && (
-        <div className="notice seal">
+        <motion.div className="notice seal" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.35, ease: ease.out }}>
           <b>Approved by quorum</b>
           <span style={{ fontSize: 14 }}>You can open this address once. The role is removed straight after.</span>
           <div><button className="btn" onClick={view}>Open address (one time)</button></div>
-        </div>
+        </motion.div>
       )}
       {address && (
         <div className="sealed-field">
           <span className="eyebrow" style={{ background: "transparent", padding: 0 }}>Opened once · now revoked</span>
-          <div className="reveal">{address}</div>
+          <div className="reveal"><ScrambleIn text={address} /></div>
         </div>
       )}
       {err && <div className="notice dark mono" style={{ fontSize: 13 }}>{err}</div>}

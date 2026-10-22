@@ -1,4 +1,8 @@
 // Hand-built charts. Every width and height is value / axis max, so the marks are to scale.
+// Marks are drawn in with clip-path once the chart is a third visible (no layout work, no distortion).
+
+import type { CSSProperties } from "react";
+import { useInClass } from "../motion/primitives";
 
 export interface Bar {
   label: string;
@@ -7,17 +11,20 @@ export interface Bar {
   tone: "seal" | "ink" | "ctx";
 }
 
+const d = (s: number) => ({ "--d": `${s}s` }) as CSSProperties;
+
 export function BarChart({ bars, max, ticks, label }: { bars: Bar[]; max: number; ticks: string[]; label: string }) {
+  const [ref, inCls] = useInClass<HTMLDivElement>();
   return (
-    <div className="bars" role="img" aria-label={label}>
-      {bars.map((b) => (
+    <div ref={ref} className={`bars draw ${inCls}`} role="img" aria-label={label}>
+      {bars.map((b, i) => (
         <div key={b.label} title={`${b.label}: ${b.display}`}>
           <div className="bar-label">
             <span>{b.label}</span>
             <span>{b.display}</span>
           </div>
           <div className="track">
-            <div className={`fill ${b.tone === "ctx" ? "" : b.tone}`} style={{ width: `${(b.value / max) * 100}%` }} />
+            <div className={`fill ${b.tone === "ctx" ? "" : b.tone}`} style={{ width: `${(b.value / max) * 100}%`, ...d(0.15 + i * 0.12) }} />
           </div>
         </div>
       ))}
@@ -31,10 +38,11 @@ export function BarChart({ bars, max, ticks, label }: { bars: Bar[]; max: number
 }
 
 export function UnitChart({ on, label }: { on: number; label: string }) {
+  const [ref, inCls] = useInClass<HTMLDivElement>();
   return (
-    <div className="units" role="img" aria-label={label}>
+    <div ref={ref} className={`units draw ${inCls}`} role="img" aria-label={label}>
       {Array.from({ length: 100 }, (_, i) => (
-        <i key={i} className={i < on ? "on" : undefined} />
+        <i key={i} className={i < on ? "on" : undefined} style={d(0.1 + (i % 10) * 0.025 + Math.floor(i / 10) * 0.035)} />
       ))}
     </div>
   );
@@ -54,6 +62,7 @@ export function StackedColumns({ data, max, ticks, label, ctxName, growName }: {
   ctxName: string;
   growName: string;
 }) {
+  const [ref, inCls] = useInClass<HTMLDivElement>();
   const pct = (v: number) => `${(v / max) * 100}%`;
   return (
     <div className="stack">
@@ -61,7 +70,7 @@ export function StackedColumns({ data, max, ticks, label, ctxName, growName }: {
         <span><i style={{ background: "var(--color-stone)" }} />{ctxName}</span>
         <span><i style={{ background: "var(--color-seal)" }} />{growName}</span>
       </div>
-      <div className="columns" role="img" aria-label={label}>
+      <div ref={ref} className={`columns draw ${inCls}`} role="img" aria-label={label}>
         <div className="yaxis">
           {ticks.map((t) => (
             <span key={t} style={{ bottom: pct(t) }}>{t}</span>
@@ -71,19 +80,19 @@ export function StackedColumns({ data, max, ticks, label, ctxName, growName }: {
           {ticks.slice(1).map((t) => (
             <div key={t} className="gridline" style={{ bottom: pct(t) }} />
           ))}
-          {data.map((d) => (
-            <div className="col" key={d.year}>
-              <div className="seg ctx" style={{ height: pct(d.ctx) }} title={`${d.year} · ${ctxName}: ${d.ctx}`} />
-              <div className="seg grow" style={{ height: pct(d.grow) }} title={`${d.year} · ${growName}: ${d.grow}`} />
+          {data.map((y, i) => (
+            <div className="col" key={y.year}>
+              <div className="seg ctx" style={{ height: pct(y.ctx), ...d(0.1 + i * 0.1) }} title={`${y.year} · ${ctxName}: ${y.ctx}`} />
+              <div className="seg grow" style={{ height: pct(y.grow), ...d(0.45 + i * 0.12) }} title={`${y.year} · ${growName}: ${y.grow}`} />
             </div>
           ))}
         </div>
         <div className="xlabels">
-          {data.map((d) => (
-            <span key={d.year}>
-              {d.year}
+          {data.map((y) => (
+            <span key={y.year}>
+              {y.year}
               <br />
-              {d.ctx + d.grow}
+              {y.ctx + y.grow}
             </span>
           ))}
         </div>

@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
+import { Scramble } from "../../motion/primitives";
+import { ease } from "../../motion/tokens";
 import { actor, LINH_ID, shortCt, THRESHOLD, type Tag } from "../engine";
 import { QuorumError, useUnfound } from "../store";
 import { Badge, Quorum, ScreenHead, StatusBadge } from "../ui";
@@ -40,16 +43,20 @@ export function Admin() {
       </ScreenHead>
 
       <div className="tabs" role="tablist">
-        <button role="tab" className="tab" aria-selected={tab === "db"} onClick={() => setTab("db")}>Database</button>
-        <button role="tab" className="tab" aria-selected={tab === "roles"} onClick={() => setTab("roles")}>Roles</button>
+        {(["db", "roles"] as const).map((t) => (
+          <button key={t} role="tab" className="tab" data-sfx="switch" aria-selected={tab === t} onClick={() => setTab(t)}>
+            {t === "db" ? "Database" : "Roles"}
+            {tab === t && <motion.span className="tab-line" layoutId="tab-dan" transition={{ type: "spring", stiffness: 520, damping: 40 }} />}
+          </button>
+        ))}
       </div>
 
       {tab === "db" && (
         <div className="stack" style={{ gap: 16 }}>
           <div className="row between">
             <div className="row" role="group" aria-label="Which system">
-              <button className={`btn sm ${legacy ? "" : "outline"}`} onClick={() => setLegacy(true)}>Legacy system</button>
-              <button className={`btn sm ${legacy ? "outline" : ""}`} onClick={() => setLegacy(false)}>Unfound</button>
+              <button className={`btn sm ${legacy ? "" : "outline"}`} data-sfx="switch" onClick={() => setLegacy(true)}>Legacy system</button>
+              <button className={`btn sm ${legacy ? "outline" : ""}`} data-sfx="switch" onClick={() => setLegacy(false)}>Unfound</button>
             </div>
             <span className="muted" style={{ fontSize: 13 }}>{legacy ? "What an admin sees today" : "What Dan sees with Unfound"}</span>
           </div>
@@ -67,7 +74,7 @@ export function Admin() {
                     <td><b>{r.id}</b><div className="muted" style={{ fontSize: 13 }}>{r.alias}</div></td>
                     {COLS.map((c) => (
                       <td key={c} className={legacy ? "" : "mono"} style={{ fontSize: legacy ? 14 : 12 }}>
-                        {legacy ? r.legacyPlain[c] : r.sealed[c] ? shortCt(r.sealed[c]!.ct, 22) : <span className="muted">not onboarded</span>}
+                        <Scramble text={legacy ? r.legacyPlain[c] : r.sealed[c] ? shortCt(r.sealed[c]!.ct, 22) : "not onboarded"} duration={600} />
                       </td>
                     ))}
                   </tr>
@@ -106,12 +113,21 @@ export function Admin() {
             </span>
           </div>
 
-          {blocked && (
-            <div className="notice dark">
-              <b>Blocked by quorum</b>
-              <span className="mono" style={{ fontSize: 13 }}>{blocked}</span>
-            </div>
-          )}
+          <AnimatePresence>
+            {blocked && (
+              <motion.div
+                key={blocked + state.log.length}
+                className="notice dark"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0, x: [0, -8, 8, -5, 5, -2, 0] }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.45, ease: ease.out }}
+              >
+                <b>Blocked by quorum</b>
+                <span className="mono" style={{ fontSize: 13 }}>{blocked}</span>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {mine.length > 0 && (
             <div className="list">

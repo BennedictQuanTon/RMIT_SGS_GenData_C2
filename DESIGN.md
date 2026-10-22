@@ -128,6 +128,58 @@ Black, white, greys and light blue. Nothing else.
 
 ---
 
+## Motion
+
+References: Emil Kowalski (animations.dev: strong ease-out, sub-300ms UI feedback, never ease-in), Rauno Freiberg ("Invisible details of interaction design": motion that explains state), and the restraint of Linear and Vercel (one choreographed moment per page, everything else quiet).
+
+**Rules**
+- Animate only `transform`, `opacity` and `clip-path`. Never width, height, top or left. Measured: scroll stays at 60 fps (p99 frame 16.8 ms, 0 dropped frames in a 40-wheel-step test).
+- Anything the user triggers responds in ≤ 220 ms with ease-out. Choreographed moments (intro, curtain, reveals) may run 0.6–0.9 s.
+- One signature per surface: the landing has the intro and the scroll-lit headline; the demo has the ciphertext scramble.
+- `prefers-reduced-motion: reduce` turns everything off: no intro, no smooth scroll, charts drawn at rest.
+
+| Token | Value | Use |
+|-------|-------|-----|
+| `ease.out` | `cubic-bezier(0.23, 1, 0.32, 1)` | All UI feedback, reveals |
+| `ease.outExpo` | `cubic-bezier(0.16, 1, 0.3, 1)` | Words rising, count-ups, chart draw |
+| `ease.inOut` | `cubic-bezier(0.77, 0, 0.175, 1)` | Curtain and intro wipe only |
+| press | 120 ms, scale 0.97 | Buttons |
+| ui | 220 ms | Tabs, persona switch, badges |
+| reveal | 800 ms, y 24 → 0 | Sections on scroll |
+| curtain | 500 ms cover + 600 ms lift | Route change |
+
+**Choreography**
+- **Intro** (first visit per session, 1.25 s, click or key skips): the mark's arch draws itself, the dot springs in, "unfound" rises letter by letter, then the white sheet wipes up and the hero starts underneath.
+- **Hero**: headline words rise out of a mask (80 ms stagger), lede and CTAs follow, the orbit's spokes draw, the five service tokens pop in and then float on a 6 s loop. Scrolling sinks the orbit (parallax 0 → 110 px) and fades the copy.
+- **Nav**: hides on scroll down, returns on scroll up. A 1 px Obsidian progress line tracks the page.
+- **Smooth scroll**: Lenis (lerp 0.12) on wheel; touch keeps native scrolling. Anchor links glide with a 72 px offset.
+- **Problem**: stat numbers count up; bars draw left to right with clip-path; the 100-square unit chart fills row by row; stacked columns grow police first, then the growing agencies.
+- **What changes**: the headline lights up word by word as it scrolls through the viewport.
+- **Route change**: an Obsidian curtain rises from the bottom over the old page, the mark flashes, and it lifts off the new page. The demo chunk is prefetched while the landing is idle, so the curtain never waits.
+- **Demo**: top bar and persona chips drop in; the active persona is a black pill that slides between chips (shared layout); screens cross-fade 14 px up; tab underline slides; ciphertext and revealed plaintext decode from random glyphs; new Fabric log lines slide in with a Periwinkle flash that fades over 1.4 s; DENIED and the 412 notice shake once; status badges pop.
+
+---
+
+## Sound
+
+Kenney "Interface Sounds" (CC0), converted to mono MP3, about 70 KB in total, in `public/sfx/`. Played through Web Audio from decoded buffers, so there is no latency. Audio unlocks on the first tap. The topbar toggle mutes it, and the choice persists.
+
+| Sound | Kenney source | Plays on |
+|-------|---------------|----------|
+| tap | click_002 | Any button press |
+| switch | tick_002 | Persona, tab, Legacy/Unfound toggle |
+| seal | confirmation_002 | `doEncrypt` OK |
+| reveal / hide | maximize_004 / minimize_004 | `doDecrypt` OK, Hide |
+| pending | drop_002 | Change set created (202) |
+| approve | select_003 | A quorum vote |
+| quorum | confirmation_004 | Quorum met, one-time role revoked |
+| denied | error_004 | Decrypt refused |
+| blocked | error_008 | `412 QUORUM_NOT_MET` |
+
+The semantic sound follows the Fabric log, so every Tide operation can be followed by ear in the video.
+
+---
+
 ## CSS custom properties
 
 ```css
