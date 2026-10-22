@@ -8,6 +8,10 @@ import { Showcase } from "./Showcase";
 import { WhoSees } from "./WhoSees";
 import { Stack } from "./Stack";
 import { Prototype } from "./Prototype";
+import { Approach } from "./Approach";
+import { Film } from "./Film";
+import { Compare, References } from "./Compare";
+import { Team } from "./Team";
 import { CountUp, Reveal, ScrollWords, Words } from "../motion/primitives";
 import { Intro, introSeen } from "../motion/Intro";
 import { ease } from "../motion/tokens";
@@ -73,8 +77,8 @@ function Nav() {
         <Brand />
         <nav className="nav-links" aria-label="Sections">
           <a href="#problem"><span>Problem</span></a>
+          <a href="#approach"><span>Approach</span></a>
           <a href="#how"><span>How it works</span></a>
-          <a href="#who"><span>Who sees what</span></a>
           <a href="#prototype"><span>Prototype</span></a>
         </nav>
         <Link to="/demo" className="btn" data-sfx="whoosh">Open demo</Link>
@@ -219,10 +223,14 @@ export function Landing() {
           </div>
         </section>
 
+        <Approach />
+        <Film />
         <Showcase />
         <WhoSees />
         <Stack />
         <Prototype />
+        <Compare />
+        <References />
 
         <section className="section fog tall">
           <div className="container section-head" style={{ marginBottom: 0 }}>
@@ -233,6 +241,7 @@ export function Landing() {
             </Reveal>
           </div>
         </section>
+        <Team />
       </main>
 
       <footer className="footer">

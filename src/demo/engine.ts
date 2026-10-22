@@ -94,6 +94,8 @@ export const LINH_ID = "sv-001";
 // The landing page embeds the demo in an iframe (?embed). It keeps its own storage so it never
 // disturbs a demo the viewer is running in another tab.
 export const EMBED = typeof window !== "undefined" && new URLSearchParams(window.location.search).has("embed");
+// ?clean hides the chrome around the device (used to record footage for the film).
+export const CLEAN = typeof window !== "undefined" && new URLSearchParams(window.location.search).has("clean");
 export const storageKey = (base: string) => (EMBED ? `${base}-embed` : base);
 
 // Synthetic people and places. Any resemblance to real addresses is accidental.

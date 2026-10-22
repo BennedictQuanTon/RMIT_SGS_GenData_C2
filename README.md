@@ -30,7 +30,7 @@ Look for: Linh seals her address and the admin table shows only ciphertext; the 
 
 ## Demo
 
-- Video: [`unfound-demo.mp4`](unfound-demo.mp4) (2 minutes)
+- Video: [`public/video/unfound.mp4`](public/video/unfound.mp4) (2 minutes). The landing page plays the same file in its film slot.
 - Live site (mock fabric, no server needed): add your Vercel URL here
 - Landing page: `/` · Prototype: `/demo` · Guided end-to-end story with sound: `/demo?story=1`
 

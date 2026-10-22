@@ -71,6 +71,8 @@ export function unlockSfx() {
 }
 
 export function play(name: Sfx) {
+  // Lets the film recorder line sounds up with the footage.
+  window.dispatchEvent(new CustomEvent("unfound-sfx", { detail: name }));
   if (muted || !ctx || !master) return;
   const buf = buffers.get(name);
   if (!buf) return;

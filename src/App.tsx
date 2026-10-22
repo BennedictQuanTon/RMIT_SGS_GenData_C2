@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, type ReactNode } from "react";
+import { lazy, Suspense, useEffect, useState, type ReactNode } from "react";
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import { Landing } from "./landing/Landing";
@@ -21,9 +21,30 @@ function Page({ children }: { children: ReactNode }) {
   );
 }
 
+// Opening the app straight on /demo: the black curtain lifts off the page once.
+function BootCurtain() {
+  return (
+    <motion.div
+      className="curtain"
+      aria-hidden="true"
+      initial={{ scaleY: 1, originY: 0 }}
+      animate={{ scaleY: 0, originY: 0 }}
+      transition={{ duration: 0.75, ease: [0.77, 0, 0.175, 1], delay: 0.35 }}
+    >
+      <motion.svg width="56" height="56" viewBox="0 0 64 64" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: [0, 1, 0], scale: 1 }} transition={{ duration: 0.8 }}>
+        <path d="M16 60V28a16 16 0 0 1 32 0v32" fill="none" stroke="#fff" strokeWidth="9" />
+        <circle cx="32" cy="28" r="5.5" fill="#fff" />
+      </motion.svg>
+    </motion.div>
+  );
+}
+
 function AnimatedRoutes() {
   const location = useLocation();
+  const [boot] = useState(() => location.pathname !== "/" && !location.pathname.startsWith("/film") && !new URLSearchParams(location.search).has("embed"));
   return (
+    <>
+    {boot && <BootCurtain />}
     <AnimatePresence mode="wait" initial={false} onExitComplete={scrollToTop}>
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Page><Landing /></Page>} />
@@ -33,6 +54,7 @@ function AnimatedRoutes() {
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </AnimatePresence>
+    </>
   );
 }
 

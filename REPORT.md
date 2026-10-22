@@ -241,7 +241,7 @@ Toàn bộ mô tả nằm trong DESIGN.md, mục Motion và Sound. Tóm tắt:
 | ngay | `npm install && npm run dev`, xem `/` và `/demo` | cả team |
 | ngay | Chạy TideCloak bằng Docker, chạy initializer, hoàn tất enrolment, kiểm tra bước 1–2 trong LIVE_TIDECLOAK | 1 người |
 | song song | Quay video theo DEMO_SCRIPT, ghép mockup, xuất mp4 dưới 100 MB | 1–2 người |
-| 16:30 | Đưa link deploy vào README, thêm `unfound-demo.mp4`, set repo public | lead |
+| 16:30 | Đưa link deploy vào README, thêm `public/video/unfound.mp4`, set repo public | lead |
 | 17:00 | Nộp Google Form (chừa 1 tiếng dự phòng) | lead |
 
 ---

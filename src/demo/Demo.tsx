@@ -3,7 +3,7 @@ import { AnimatePresence, LayoutGroup, motion } from "motion/react";
 import { Brand } from "../brand/Logo";
 import { Avatar } from "../brand/Avatar";
 import { Device, type DeviceKind } from "../ui/Device";
-import { ACTORS, actor, EMBED, storageKey, type ActorId, type LogEvent } from "./engine";
+import { ACTORS, actor, CLEAN, EMBED, storageKey, type ActorId, type LogEvent } from "./engine";
 import { mockFabric } from "./fabric";
 import { LiveRoot, type LiveInfo } from "./live";
 import { UnfoundProvider, useUnfound } from "./store";
@@ -265,7 +265,7 @@ function Shell({ live }: { live?: LiveInfo }) {
   );
 
   return (
-    <div className={`app ${EMBED ? "embed" : ""} ${playing ? "is-playing" : ""}`}>
+    <div className={`app ${EMBED ? "embed" : ""} ${CLEAN ? "clean" : ""} ${playing ? "is-playing" : ""}`}>
       <motion.header className="topbar" initial={{ y: -16, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.6, ease: ease.out, delay: EMBED ? 0 : 0.35 }}>
         <div className="topbar-inner">
           {!EMBED && <Brand to="/" sfx="whoosh" />}

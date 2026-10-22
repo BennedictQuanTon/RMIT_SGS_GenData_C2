@@ -30,17 +30,17 @@ export function Police() {
         Emergencies still work. They just need two independent people to agree, and the access ends after one view.
       </ScreenHead>
 
-      <div className="card stack">
-        <b>Request the full address</b>
-        <div className="kv">
-          <dt>Person</dt><dd>Linh N. · {LINH_ID}</dd>
-          <dt>Access</dt><dd className="mono">_tide_addrfull.selfdecrypt · one view</dd>
+      <div className="card stack compact-form">
+        <div className="row between">
+          <b>Request the full address</b>
+          <span className="chips">
+            <span className="chip">Linh N. · {LINH_ID}</span>
+            <span className="chip mono">_tide_addrfull.selfdecrypt · one view</span>
+          </span>
         </div>
-        <div className="field">
-          <label htmlFor="pol-reason">Reason</label>
-          <textarea id="pol-reason" rows={2} value={reason} onChange={(e) => setReason(e.target.value)} />
-        </div>
-        <div>
+        <div className="inline-field">
+          <label htmlFor="pol-reason" className="sr-only">Reason</label>
+          <input id="pol-reason" value={reason} onChange={(e) => setReason(e.target.value)} />
           <button
             className="btn"
             disabled={!sealed}
@@ -50,7 +50,7 @@ export function Police() {
             Request break-glass
           </button>
         </div>
-        {!sealed && <span className="muted" style={{ fontSize: 13 }}>Linh has not sealed an address yet.</span>}
+        {!sealed && <span className="muted" style={{ fontSize: 12 }}>Linh has not sealed an address yet.</span>}
       </div>
 
       {mine.length > 0 && (

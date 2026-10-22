@@ -28,4 +28,4 @@ Record at 1440×900 for desktop screens and 390×844 for Linh (phone). Press **R
 | 0:40–1:35 | The prototype | Click path 1–10, phone mockup for Linh, laptop mockup for the rest. Hold on the 412 notice and the break-glass approval | "TideCloak seals the address in the browser. No one holds the key. Not the school, not the admin, not us." |
 | 1:35–2:00 | What changes | Landing "What changes" section, then end card: mark, "Built with TideCloak", team name | "Survivors stop choosing between help and hiding. Services stop being the leak." |
 
-Keep the final `unfound-demo.mp4` under 100 MB (1080p, H.264, ~6 Mbps is about 90 MB for 2 minutes).
+Keep the final `public/video/unfound.mp4` under 100 MB (1080p, H.264, ~6 Mbps is about 90 MB for 2 minutes).

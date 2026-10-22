@@ -11,9 +11,9 @@ import { ease } from "../motion/tokens";
 export function Prototype() {
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const phoneY = useTransform(scrollYProgress, [0, 1], [70, -50]);
-  const padY = useTransform(scrollYProgress, [0, 1], [110, -30]);
-  const macY = useTransform(scrollYProgress, [0, 1], [30, -20]);
+  const phoneY = useTransform(scrollYProgress, [0, 1], [30, -30]);
+  const padY = useTransform(scrollYProgress, [0, 1], [36, -36]);
+  const macY = useTransform(scrollYProgress, [0, 1], [12, -12]);
 
   return (
     <section id="prototype" className="section proto" ref={ref}>
@@ -31,21 +31,27 @@ export function Prototype() {
             <Device kind="macbook">
               <img src="/shots/dan-412.png" alt="Dan, the IT admin, blocked with 412 QUORUM_NOT_MET after granting himself access" loading="lazy" />
             </Device>
-            <span className="proto-tag" style={{ left: "6%", top: "-14px" }}>Dan · IT admin · 412 QUORUM_NOT_MET</span>
+            <span className="proto-num">02</span>
           </motion.div>
           <motion.div className="proto-phone" style={{ y: phoneY }} initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.9, ease: ease.out, delay: 0.15 }}>
             <Device kind="iphone">
               <img src="/shots/linh-sealed.png" alt="Linh's phone showing her address sealed into three encrypted parts" loading="lazy" />
             </Device>
-            <span className="proto-tag" style={{ left: "50%", bottom: "-16px", translate: "-50% 0" }}>Linh · sealed on her phone</span>
+            <span className="proto-num">01</span>
           </motion.div>
           <motion.div className="proto-pad" style={{ y: padY }} initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.9, ease: ease.out, delay: 0.25 }}>
             <Device kind="ipad">
               <img src="/shots/police-once.png" alt="The officer's tablet showing an address opened once after two approvals" loading="lazy" />
             </Device>
-            <span className="proto-tag" style={{ right: "6%", bottom: "-16px" }}>Police · one view, 2 of 3</span>
+            <span className="proto-num">03</span>
           </motion.div>
         </div>
+
+        <ol className="proto-legend">
+          <li><span className="proto-num static">01</span><div><b>Linh, on her phone</b><span>Her address is sealed into three parts before it leaves.</span></div></li>
+          <li><span className="proto-num static">02</span><div><b>Dan, the IT admin</b><span>Grants himself access. Alone, the commit returns 412.</span></div></li>
+          <li><span className="proto-num static">03</span><div><b>Police, on a tablet</b><span>One view after two approvers sign, then revoked.</span></div></li>
+        </ol>
 
         <ul className="cast">
           {ACTORS.map((a, i) => (

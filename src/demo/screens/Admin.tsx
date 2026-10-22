@@ -94,21 +94,21 @@ export function Admin() {
 
       {tab === "roles" && (
         <div className="stack" style={{ gap: 16 }}>
-          <div className="card stack">
-            <b>Assign role</b>
-            <div className="kv">
-              <dt>User</dt><dd>Dan K. (himself)</dd>
-              <dt>Role</dt><dd className="mono">_tide_addrfull.selfdecrypt</dd>
-              <dt>About</dt><dd>Linh N. · {LINH_ID}</dd>
+          <div className="card stack compact-form">
+            <div className="row between">
+              <b>Assign role</b>
+              <span className="chips">
+                <span className="chip">Dan K. (himself)</span>
+                <span className="chip mono">_tide_addrfull.selfdecrypt</span>
+                <span className="chip">Linh N. · {LINH_ID}</span>
+              </span>
             </div>
-            <div className="field">
-              <label htmlFor="dan-reason">Reason shown to approvers</label>
-              <input id="dan-reason" value={reason} onChange={(e) => setReason(e.target.value)} />
-            </div>
-            <div>
+            <div className="inline-field">
+              <label htmlFor="dan-reason" className="sr-only">Reason shown to approvers</label>
+              <input id="dan-reason" value={reason} onChange={(e) => setReason(e.target.value)} placeholder="Reason shown to approvers" />
               <button className="btn" data-demo="assign" onClick={() => requestGrant({ target: "dan", tag: "addrfull", subject: LINH_ID, reason })}>Assign role</button>
             </div>
-            <span className="muted" style={{ fontSize: 13 }}>
+            <span className="muted" style={{ fontSize: 12 }}>
               In TideCloak this write is not applied. It becomes a change set that needs {THRESHOLD} of 3 realm admins.
             </span>
           </div>

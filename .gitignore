@@ -59,3 +59,8 @@ video/raw/
 *.mov
 *.prproj
 *.aep
+
+# Reference footage (local only, never pushed)
+/12d103db3cbc4467a6362af9c8496e88.MP4
+/reference/
+/video-work/

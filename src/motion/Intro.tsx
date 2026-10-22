@@ -4,14 +4,12 @@ import { ease } from "./tokens";
 import { lenis } from "./SmoothScroll";
 import { play, tryAutoUnlock, whoosh } from "./sfx";
 
-const SEEN = "unfound-intro-seen";
 
+// The intro plays on every fresh page load (opening the app), and not again when you come back
+// to the landing page from inside the app.
+let played = false;
 export function introSeen(): boolean {
-  try {
-    return sessionStorage.getItem(SEEN) === "1" || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  } catch {
-    return false;
-  }
+  return played;
 }
 
 // First visit only: the mark draws itself, the wordmark rises, then the page is unveiled by a wipe.
@@ -22,6 +20,7 @@ export function Intro({ onDone }: { onDone: () => void }) {
   // Sound for the opening: soft air while the arch draws, a pop when the dot lands.
   // Plays only if the browser allows audio before a click (see README for recording).
   useEffect(() => {
+    played = true;
     let pop = 0;
     tryAutoUnlock().then((ok) => {
       if (!ok) return;
@@ -48,11 +47,6 @@ export function Intro({ onDone }: { onDone: () => void }) {
 
   useEffect(() => {
     if (phase !== "out") return;
-    try {
-      sessionStorage.setItem(SEEN, "1");
-    } catch {
-      /* ignore */
-    }
     onDone(); // start the hero while the curtain lifts, so the two overlap
     whoosh("up", 0.85, 0.16);
     const t = setTimeout(() => {
