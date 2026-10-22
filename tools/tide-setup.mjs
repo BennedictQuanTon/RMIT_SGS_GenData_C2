@@ -11,7 +11,11 @@ import os from "node:os";
 const project = process.argv[2] ?? path.join(os.homedir(), "tide-setup", "unfound-realm");
 const realm = process.argv[3] ?? "nextjs-test";
 const base = process.env.TIDECLOAK_URL ?? "http://localhost:8080";
-const admin = { user: process.env.TC_ADMIN ?? "admin", pass: process.env.TC_PASS ?? "password" };
+const admin = { user: process.env.TC_ADMIN ?? "admin", pass: process.env.TC_PASS ?? process.env.KC_BOOTSTRAP_ADMIN_PASSWORD };
+if (!admin.pass) {
+  console.error("Set TC_PASS (or KC_BOOTSTRAP_ADMIN_PASSWORD) to your local TideCloak master admin password.");
+  process.exit(2);
+}
 
 function find(dir, name, depth = 0) {
   if (depth > 4 || !fs.existsSync(dir)) return null;
@@ -28,7 +32,8 @@ function find(dir, name, depth = 0) {
 }
 
 const cfg = find(project, "tidecloak.json");
-if (!cfg) {
+const parsed = cfg ? JSON.parse(fs.readFileSync(cfg, "utf8") || "{}") : {};
+if (!cfg || !parsed.realm) {
   console.error(`No tidecloak.json under ${project}. Finish "bash init/tcinit.sh" and the Tide enrolment first.`);
   process.exit(1);
 }

@@ -100,6 +100,12 @@ export function Gate({ liveReady, onLive, onMock, onStory }: {
           </motion.button>
         </div>
 
+        {!liveReady && (
+          <motion.p className="gate-note" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.0 }}>
+            Live Tide sign-in is paused: on 22 Oct 2026 Tide's network could not enrol accounts (13–17 of 20 ORKs failing). The mock runs the same rules.
+          </motion.p>
+        )}
+
         <motion.button className="gate-story" data-sfx="tap" onClick={(e) => go(e, "#ffffff", onStory)} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.1 }}>
           <svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12-7.5z" fill="currentColor" /></svg>
           Watch the 70-second story

@@ -672,3 +672,5 @@ html.lenis, html.lenis body { height: auto; }
 
 .source.accessed { margin-top: 4px; font-size: 11px; letter-spacing: 0.01em; color: var(--color-stone); }
 .ref-date { color: var(--color-stone); font-size: 11px; }
+
+.gate-note { max-width: 560px; font-size: 13px !important; line-height: 1.5; color: var(--color-graphite); margin-top: 2px; }

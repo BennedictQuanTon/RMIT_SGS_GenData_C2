@@ -65,3 +65,6 @@ video/raw/
 /reference/
 /video-work/
 /public/film/
+
+# Local TideCloak data and realm kit (scripts/setup-local.sh)
+/.tide/

@@ -2,29 +2,29 @@
 
 ## Project overview
 
-_Unfound lets family-violence survivors use schools, clinics and courts after they move, without their new address ever being readable by any single employee, admin or operator._
+_Unfound is a safe-address layer for family-violence survivors: schools, clinics and courts can reach them after they move, and no single employee, admin or operator can find them._
 
 Built with [TideCloak](https://tide.org/tidecloak?utm_source=github&utm_medium=readme&utm_campaign=unlocked).
 
 ### 1. Vision & originality
 
-A safe-address layer for public services. A survivor seals her new address once, on her phone. Each service gets only the part it needs: the school sees "in zone", the GP gets a relay number. Opening the full address, even in an emergency, needs two of three independent approvers.
+A survivor seals her new address once, on her phone. Each service gets only the part it needs: the school learns "in zone", the GP gets a relay number, court mail opens the street only as the label prints. Opening the full address, even in an emergency, takes two of three independent approvers, for one view.
 
 ### 2. Trust constraint insight
 
-After leaving, the new address is the most dangerous data a survivor owns, and every service stores it in plain text. The threat is insiders: 2,215 misuse-of-information allegations in four years across seven Queensland agencies. In 2014 an officer passed a survivor's new address to her abuser. Permissions can't help: admins are the risk. Survivors stay away: 90.4% of Vietnamese women abused by husbands never seek formal help.
+After leaving, the new address is the most dangerous data a survivor owns, and every service keeps it in plain text. The threat is insiders, not hackers: 2,215 misuse-of-information allegations in four years across seven Queensland agencies [2]. In 2014 an officer passed a survivor's new address to her abuser [5]. Permissions cannot fix this, because admins are the risk.
 
 ### 3. Value & impact
 
-1.5 million Australian women have experienced violence from a previous partner, and 866,700 moved out when it ended. With Unfound, Linh can enrol her son at a new school and see a GP in the same week. Agencies stop being the leak, and can prove it.
+1.5 million Australian women have experienced violence from a former partner, and 866,700 moved out when it ended [1]. In Viet Nam, 90.4% of women abused by a husband never seek formal help [4]. With Unfound, Linh enrols her son and sees a GP the same week without creating a new way to be found.
 
 ### 4. Why TideCloak matters
 
-Addresses are encrypted in the browser with TideCloak's tag-based E2EE (`doEncrypt`/`doDecrypt`). The server holds only ciphertext. Each part is a tag gated by a `_tide_<tag>.selfdecrypt` role that Tide's network checks. Every role grant passes Quorum-Enforced Governance: a lone admin's self-grant stays pending, and committing it returns `412 QUORUM_NOT_MET`.
+TideCloak encrypts each part in the browser (`doEncrypt`, tag-based E2EE); our server holds ciphertext and no key. A `_tide_<tag>.selfdecrypt` role, checked by Tide's network, decides who opens which part. Every role grant is a Quorum-Enforced Governance change set: a lone admin's self-grant stays pending, and committing it returns `412 QUORUM_NOT_MET`.
 
 ### 5. Prototype & storytelling
 
-Look for: Linh seals her address and the admin table shows only ciphertext; the school confirms the zone but is denied the street; Dan grants himself access and is blocked; a police welfare check is approved 2 of 3, opens once, then is revoked; Linh's "Who looked" timeline shows it all.
+Open `/demo?story=1`: Linh's database holds only ciphertext; the school confirms the zone but is denied the street; Dan's self-grant is blocked; a welfare check is approved 2 of 3, opened once, revoked; Linh's "Who looked" log shows it all. Measured: 15 Tide operations, 0 plaintext addresses, 68 s.
 
 ---
 
@@ -45,22 +45,13 @@ Look for: Linh seals her address and the admin table shows only ciphertext; the 
 
 ---
 
+> **Note for judges.** Live Tide sign-in could not be completed: on 22 Oct 2026 Tide's enclave failed to create the first account on every attempt ("Could not reach enough NEW ORKs", 13–17 of 20 ORKs failing). The TideCloak integration is in the code and the realm was provisioned and licensed; the film and the deploy run on the mock fabric. Evidence and details in [Run it](#run-it).
+
 ## The film
 
 [`public/video/unfound.mp4`](public/video/unfound.mp4) · 1:55 · 1080p · sound on.
 
 The possibility, the constraint, the prototype (with TideCloak's role) and what changes, in that order. Voice by Kokoro (`af_heart`), problem footage from Mixkit, and every product shot is the real prototype running its own end-to-end story.
-
-## The problem, in four numbers
-
-| | | |
-|---|---|---|
-| **1.5M** | Australian women who have experienced violence from a previous partner, about 9× more than from a current one | ABS PSS 2021–22 [1] |
-| **64%** | of them moved out when it ended: 866,700 new addresses for schools, GPs, banks and rolls to hold | ABS PSS 2021–22 [1] |
-| **2,215** | allegations of misused confidential information in 4 years across 7 Queensland agencies; 4.8× growth outside the police | CCC Queensland [2] |
-| **90.4%** | of Vietnamese women abused by a husband never sought formal help | National Study, Viet Nam 2019 [4] |
-
-In 2014 a Queensland officer looked up a survivor's new address and handed it to her abuser [5]. In 2024 the same records system auto-filled survivors' addresses into forms served on offenders [6]. The threat is not a hacker. It is whoever holds the key.
 
 ## How it works
 
@@ -85,7 +76,9 @@ Built on: TideCloak (BYOiD sign-in, OIDC) · Hermetic E2EE · Tide Fabric of ind
   <img src="public/shots/police-once.png" alt="Police tablet: one view after 2 of 3 approvals" width="28%" />
 </p>
 
-Seven people, one address, no master key. Open `/demo?story=1` and the app plays the whole story by itself in about 70 seconds: it switches person and device (iPhone, MacBook, iPad), zooms onto each key feature, pops a callout with sound, and clicks the real buttons.
+<p align="center"><img src="docs/assets/gate.png" alt="The demo's welcome screen: with a Tide account, or without" width="100%" /></p>
+
+Seven people, one address, no master key. `/demo` opens on a welcome screen: **With a Tide account** (live TideCloak) or **Without an account** (mock fabric). Open `/demo?story=1` and the app plays the whole story by itself in about 70 seconds: it switches person and device (iPhone, MacBook, iPad), zooms onto each key feature, pops a callout with sound, and clicks the real buttons.
 
 | Scene | Who | What you see |
 |---|---|---|
@@ -94,19 +87,6 @@ Seven people, one address, no master key. Open `/demo?story=1` and the app plays
 | 3 | Dan · IT admin | Legacy view shows every address; Unfound shows ciphertext. His self-grant gets `412`. |
 | 4–7 | Police, Mai, Ruth | Welfare check, two independent approvals, one view, role revoked. |
 | 8 | Linh | "Who looked": every attempt, approval and refusal, including Dan's. |
-
-## Proof
-
-Measured on this build with automated headless-Chrome runs of the full story and the landing page.
-
-| Result | |
-|---|---|
-| **0** plaintext addresses stored | 12 ciphertexts across 4 synthetic survivors |
-| **412** for a lone admin's commit | `QUORUM_NOT_MET` on every self-grant attempt |
-| **2 of 3** approvers per role change | `max(1, floor(0.7 × N))`, N = 3 realm admins |
-| **15** Tide operations end to end | 8 scenes, 7 personas, 68 s, 0 console errors |
-| **1** view per break-glass grant | role removed the moment it is used |
-| **16.8 ms** p99 frame while scrolling | 60 fps, 0 dropped frames over 738 |
 
 ## Compared
 
@@ -124,30 +104,39 @@ Measured on this build with automated headless-Chrome runs of the full story and
 
 ## Run it
 
-Requirements: Node.js 20+. Docker only for live mode.
+Requirements: Node.js 20+. Docker for the live TideCloak mode.
+
+**Just look around (no account, no server).**
 
 ```bash
-npm install
-npm run dev          # http://localhost:3000   ·   /demo   ·   /demo?story=1
+npm install && npm run dev        # http://localhost:3000 · /demo · /demo?story=1
 ```
 
-**Mock mode (default).** With no `public/tidecloak.json`, the demo uses a local mock fabric that applies the same role rules with real AES-GCM in the browser. The flow is identical, but the keys live in your browser. This is what the static deploy runs.
+`/demo` opens on a welcome screen with two doors. **Without an account** runs the full flow on a local mock fabric that applies the same role rules with real AES-GCM in the browser (keys live in your browser, so it proves the experience, not the security). This is what the public Vercel deploy runs.
 
-**Live mode (real TideCloak).**
+**With a Tide account (real TideCloak, one command).**
 
-1. Start TideCloak:
-   ```bash
-   docker run --name mytidecloak -d -p 8080:8080 \
-     -e KC_BOOTSTRAP_ADMIN_USERNAME=admin -e KC_BOOTSTRAP_ADMIN_PASSWORD=password \
-     tideorg/tidecloak-dev:latest
-   ```
-2. In another folder run `npm init @tidecloak/nextjs@latest tide-setup` and finish the Tide enrolment link it prints. This creates the realm, licence, Tide IdP and first admin, and enables Quorum-Enforced Governance.
-3. Copy the generated `tidecloak.json` to `public/tidecloak.json`.
-4. Create the roles and users in [`docs/LIVE_TIDECLOAK.md`](docs/LIVE_TIDECLOAK.md), then `npm run dev`. The demo switches to **Live · TideCloak**.
+```bash
+cp .env.example .env              # your licence email, TIDE_TERMS_ACCEPTED=yes after reading tide.org/legal, a local admin password
+bash scripts/setup-local.sh
+```
+
+The script installs dependencies, adds Tide's MCP server to Claude Code (`claude mcp add --transport http tide https://mcp.tide.org/mcp`), starts TideCloak in Docker, provisions a licensed Tide realm with Quorum-Enforced Governance, waits while you enrol your Tide account in the browser, copies `tidecloak.json` into the app, creates the six `_tide_addr*` roles, and starts the app. Then choose **With a Tide account** on `/demo`: sealing calls `doEncrypt` and opening calls `doDecrypt` on Tide's network. Details and manual steps: [`docs/LIVE_TIDECLOAK.md`](docs/LIVE_TIDECLOAK.md).
+
+A realm running in Docker only serves your own machine. For other people to sign in with Tide on a public URL, the realm has to run on hosted TideCloak (Skycloak) instead; the app wiring is identical.
+
+**⚠️ Live Tide sign-in could not be completed during the hackathon (22 Oct 2026).** We provisioned a licensed realm on local TideCloak (`unfound1`: licence active, Quorum-Enforced Governance on), then tried to create the first Tide account many times between 16:20 and 17:00 (UTC+7). Every attempt failed inside Tide's enclave because most of Tide's ORK network did not respond:
+
+<p align="center">
+  <img src="docs/assets/tide-enrol-error-1.png" alt="Tide enclave: Could not reach enough NEW ORKs (got 3 of 20 required, 17 of 20 failed)" width="49%" />
+  <img src="docs/assets/tide-enrol-error-2.png" alt="Tide enclave: Could not reach enough NEW ORKs (got 7 of 20 required, 13 of 20 failed)" width="49%" />
+</p>
+
+Earlier licence attempts on the same day returned *"Midgard.FinalizeWallet: Not enough orks returned an ok response"* before one succeeded. Without an enrolled Tide account there is no admin and no user to sign in, so the live mode cannot run yet. Everything on our side is in place: the live code path (`src/demo/live.tsx`: TideCloak sign-in, `doEncrypt`/`doDecrypt`, AdminAPI change sets) switches on as soon as `public/tidecloak.json` holds a realm, and `scripts/setup-local.sh` reproduces the whole setup once Tide's network is healthy. **The film and the public deploy therefore run on the mock fabric**, which applies the same role and quorum rules.
+
+If provisioning stops with `KEYGEN_FAILED` / "Not enough orks returned an ok response", Tide's network could not activate the licence at that moment. Wait a minute, set `TIDE_REALM` to a new name and rerun.
 
 **Deploy.** `npm run build` writes `dist/`. Vercel: import the repo, framework "Vite" (`vercel.json` handles routes). Netlify: drop `dist/` on app.netlify.com/drop (`public/_redirects` included).
-
-Recording with sound from the first frame: browsers block audio before the first click. Launch Chrome with `--autoplay-policy=no-user-gesture-required`, or click once before you start.
 
 ## Project layout
 
@@ -156,7 +145,9 @@ src/landing/       landing page: hero scene, problem, approach, showcase, proof,
 src/demo/          prototype: engine (state machine), fabric (mock + live), story, screens per persona
 src/demo/live.tsx  TideCloak wiring: @tidecloak/react provider, doEncrypt/doDecrypt, AdminAPI change sets
 src/film/          the film as a deterministic, frame-seekable page (/film)
-src/motion/        intro, route curtain, smooth scroll, reveal primitives, Web Audio SFX
+src/motion/        intro, page morph, smooth scroll, reveal primitives, Web Audio SFX
+scripts/           setup-local.sh: one-command local setup with TideCloak and Tide MCP
+tools/             tide-setup.mjs: wire a realm into the app (adapter + roles)
 DESIGN.md          design system the UI follows
 REPORT.md          research notes, numbers and sources
 ```
