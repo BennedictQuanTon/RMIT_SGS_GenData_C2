@@ -16,9 +16,10 @@ html.film-mode, html.film-mode body { margin: 0; background: #000; overflow: hid
 .lam-glow.g2 { width: 1000px; height: 760px; right: -240px; top: -200px; background: radial-gradient(closest-side, rgba(61, 139, 255, 0.28), transparent); }
 .veil { position: absolute; inset: 0; background: rgba(246, 248, 253, 0.72); }
 
-.ui-frame { position: absolute; right: 70px; top: 214px; width: 1060px; aspect-ratio: 1920 / 1160; border-radius: 22px; overflow: hidden; background: #fff; box-shadow: 0 60px 120px -40px rgba(20, 40, 110, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.06); transform-origin: 60% 50%; }
-.ui-video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ui-frame { position: absolute; right: -40px; top: 150px; width: 1260px; aspect-ratio: 1920 / 1160; overflow: hidden; transform-origin: 60% 50%; mix-blend-mode: multiply; }
+.ui-video { width: 100%; height: 100%; object-fit: cover; display: block; transform-origin: 50% 42%; }
 .ui-flash { position: absolute; inset: 0; background: #fff; pointer-events: none; }
+.ui-frame { -webkit-mask-image: radial-gradient(120% 110% at 50% 45%, #000 62%, transparent 82%); mask-image: radial-gradient(120% 110% at 50% 45%, #000 62%, transparent 82%); }
 
 .type { position: absolute; inset: 0; pointer-events: none; }
 .k { display: flex; flex-wrap: wrap; font-weight: 600; letter-spacing: -0.025em; line-height: 1.08; }
@@ -43,7 +44,7 @@ html.film-mode, html.film-mode body { margin: 0; background: #000; overflow: hid
 
 .left-col { position: absolute; left: 110px; top: 0; bottom: 0; width: 700px; }
 .left-col .k { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%); }
-.eb { position: absolute; top: calc(50% - 170px); left: 0; font: 600 16px/1 "Geist", sans-serif; letter-spacing: 0.18em; text-transform: uppercase; color: #6e6e6e; }
+.eb { position: absolute; top: calc(50% - 170px); left: 0; font: 600 20px/1 "Geist", sans-serif; letter-spacing: 0.18em; text-transform: uppercase; color: #6e6e6e; }
 
 .pill { position: absolute; display: inline-flex; align-items: center; gap: 12px; padding: 14px 22px; border-radius: 999px; background: rgba(255, 255, 255, 0.92); color: #000; font: 500 24px/1 "Geist", sans-serif; letter-spacing: -0.01em; box-shadow: 0 20px 50px -20px rgba(20, 40, 110, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.05); white-space: nowrap; transform-origin: center; }
 .pill i { width: 12px; height: 12px; border-radius: 50%; background: #3d8bff; box-shadow: 0 0 0 5px rgba(61, 139, 255, 0.18); }
@@ -54,7 +55,22 @@ html.film-mode, html.film-mode body { margin: 0; background: #000; overflow: hid
 .built-cell { display: grid; justify-items: center; gap: 10px; }
 .built-cell .count { color: #000; }
 .built-cell .k { justify-content: center; color: #6e6e6e; font-weight: 500; }
-.k.thanks { top: 36%; }
+.k.thanks { top: 110px; transform: none; }
 .thanks-row { position: absolute; left: 0; right: 0; top: 52%; display: flex; justify-content: center; gap: 18px; }
 .thanks-row .pill { position: static; }
-.k.thanks-sub { top: 70%; color: #6e6e6e; font-weight: 500; }
+.k.thanks-sub { top: 1000px; transform: none; color: #3a3a3a; font-weight: 500; }
+
+.built { top: 330px; }
+.built-art { display: flex; justify-content: center; align-items: center; height: 70px; margin-bottom: 6px; }
+.built-chip { display: inline-grid; place-items: center; color: #000; }
+.built-chip + .built-chip { margin-left: 10px; }
+.built-cell:first-child .built-chip + .built-chip { margin-left: -14px; }
+.built-chip img { width: 62px; height: 62px; border-radius: 50%; box-shadow: 0 0 0 3px #f6f8fd; background: #fff; }
+.built-cell:not(:first-child) .built-chip { width: 58px; height: 58px; border-radius: 16px; background: #fff; box-shadow: 0 10px 30px -14px rgba(20, 40, 110, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.05); }
+.orbit-film { position: absolute; inset: 0; }
+.orbit-rings { position: absolute; inset: 0; }
+.orbit-core { position: absolute; width: 170px; height: 170px; border-radius: 50%; background: #000; display: grid; place-items: center; box-shadow: 0 0 0 14px rgba(141, 187, 255, 0.18), 0 30px 60px -20px rgba(0, 0, 0, 0.45); }
+.orbit-pill { transform-origin: center; }
+.orbit-logo { position: absolute; display: grid; justify-items: center; gap: 8px; }
+.orbit-logo svg { padding: 18px; width: 80px; height: 80px; border-radius: 50%; background: #fff; box-shadow: 0 16px 40px -18px rgba(20, 40, 110, 0.4), 0 0 0 1px rgba(0, 0, 0, 0.05); box-sizing: content-box; }
+.orbit-logo span { font: 500 17px/1 "Geist", sans-serif; color: #3a3a3a; white-space: nowrap; }

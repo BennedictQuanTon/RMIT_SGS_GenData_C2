@@ -268,7 +268,9 @@ html.lenis, html.lenis body { height: auto; }
 .intro { position: fixed; inset: 0; z-index: 100; background: var(--color-canvas); display: grid; place-items: center; cursor: pointer; }
 .intro-lockup { display: grid; justify-items: center; gap: 14px; }
 .intro-word { font: 600 46px/1 var(--font-display); letter-spacing: -0.035em; }
-.intro-tag { font-size: 14px; color: var(--color-graphite); }
+.intro-tag { font: italic 400 44px/1.1 "Instrument Serif", Georgia, serif; letter-spacing: -0.01em; color: var(--color-obsidian); margin-top: 6px; }
+.intro-tag-b { color: var(--color-lam); }
+@media (max-width: 520px) { .intro-tag { font-size: 32px; } }
 .curtain { position: fixed; inset: 0; z-index: 90; background: var(--color-obsidian); display: grid; place-items: center; pointer-events: none; }
 .nav .progress { position: absolute; left: 0; right: 0; bottom: -1px; height: 1px; background: var(--color-obsidian); transform-origin: 0 50%; }
 .float { animation: float 6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }

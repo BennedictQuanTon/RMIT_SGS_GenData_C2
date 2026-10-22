@@ -1,5 +1,12 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import type { ComponentType } from "react";
+import { EyeOff, FileSignature, KeyRound, Laptop, LockKeyhole, ShieldCheck, Smartphone, Tablet, type LucideProps } from "lucide-react";
+import { siDocker, siFfmpeg, siFramer, siGithub, siJsonwebtokens, siKeycloak, siNodedotjs, siOpenid, siReact, siTypescript, siVercel, siVite } from "simple-icons";
+import { avatarUri } from "../brand/Avatar";
+import type { ActorId } from "../demo/engine";
 import "./film.css";
+
+const CAST: ActorId[] = ["linh", "school", "gp", "dan", "mai", "ruth", "officer"];
 
 // The two-minute film, as a page. Everything is a pure function of the time `t`, so the renderer
 // can seek frame by frame (window.__film.seek) and get the same picture every time.
@@ -13,12 +20,12 @@ export const T = {
 export const END = 115.5;
 
 // Windows of the recorded UI clip shown in the device frame: [film start, film end, clip offset, speed]
-const UI_WINDOWS: [number, number, number, number][] = [
-  [53.3, 62.3, 0.8, 1],
-  [62.3, 67.3, 11.0, 1],
-  [67.3, 78.1, 26.8, 1],
-  [78.1, 87.1, 41.0, 2.05],
-  [87.1, 92.9, 63.2, 1],
+const UI_WINDOWS: [number, number, number, number, number][] = [
+  [53.3, 62.3, 0.8, 1, 1.42],
+  [62.3, 67.3, 11.0, 1, 1.22],
+  [67.3, 78.1, 26.8, 1, 1.22],
+  [78.1, 87.1, 41.4, 2.0, 1.22],
+  [87.1, 92.9, 63.2, 1, 1.42],
 ];
 
 // Sound cues the mixer reads back (film seconds).
@@ -30,7 +37,10 @@ export const SFX_CUES: { t: number; name: string; gain?: number }[] = [
   { t: 82.4, name: "pop" }, { t: 85.0, name: "pop" },
   { t: 92.6, name: "whoosh_up" },
   { t: 99.2, name: "tap" }, { t: 99.6, name: "tap" }, { t: 100.0, name: "tap" }, { t: 100.4, name: "tap" },
+  { t: 99.1, name: "pop", gain: 0.25 }, { t: 99.5, name: "pop", gain: 0.25 }, { t: 99.9, name: "pop", gain: 0.25 }, { t: 100.3, name: "pop", gain: 0.25 },
+  { t: 104.3, name: "chime", gain: 0.3 },
   { t: 104.6, name: "pop" }, { t: 104.9, name: "pop" }, { t: 105.2, name: "pop" }, { t: 105.5, name: "pop" },
+  ...Array.from({ length: 12 }, (_, i) => ({ t: 105.0 + i * 0.12, name: "tap", gain: 0.18 })),
   { t: 111.2, name: "chime" },
 ];
 export const UI_WINDOWS_EXPORT = UI_WINDOWS;
@@ -158,6 +168,59 @@ function Mark({ t, at, size = 140, color = "#000" }: { t: number; at: number; si
   );
 }
 
+// ---------- built + thanks visuals ----------
+const pop = (t: number, at: number) => {
+  const k = prog(t, at, 0.45);
+  return k <= 0 ? 0.4 : 1 - Math.exp(-7 * k) * Math.cos(10 * k) * 0.6;
+};
+const ico = (I: ComponentType<LucideProps>) => <I size={30} strokeWidth={2} />;
+const BUILT: { v: number; l: string; art: ReactNode[] }[] = [
+  { v: 7, l: "people", art: CAST.map((id) => <img key={id} src={avatarUri(id)} alt="" />) },
+  { v: 8, l: "scenes, end to end", art: [ico(Smartphone), ico(Laptop), ico(Tablet)] },
+  { v: 15, l: "Tide operations", art: [ico(KeyRound), ico(ShieldCheck), ico(FileSignature)] },
+  { v: 0, l: "plaintext addresses", art: [ico(LockKeyhole), ico(EyeOff)] },
+];
+
+const STACK = [siKeycloak, siOpenid, siJsonwebtokens, siReact, siTypescript, siVite, siDocker, siNodedotjs, siVercel, siFramer, siGithub, siFfmpeg];
+const TIDE = ["TideCloak", "Hermetic E2EE", "Quorum governance", "Tide Fabric"];
+
+function Orbit({ t }: { t: number }) {
+  const cx = 960, cy = 575;
+  const out = eio(prog(t, 110.2, 0.6));
+  const ringIn = eio(prog(t, 104.3, 1.0));
+  const spinA = -(t - 104) * 9; // Tide ring, slow, counter-clockwise
+  const spinB = (t - 104) * 6; // open stack, clockwise
+  return (
+    <div className="orbit-film" style={{ opacity: 1 - out, transform: `scale(${1 - out * 0.04})` }}>
+      <svg width="1920" height="1080" viewBox="0 0 1920 1080" className="orbit-rings">
+        <ellipse cx={cx} cy={cy} rx="600" ry="330" fill="none" stroke="#c9d6f5" strokeWidth="1.5" strokeDasharray="5 9" pathLength={1} style={{ strokeDashoffset: 0, opacity: ringIn }} />
+        <ellipse cx={cx} cy={cy} rx="300" ry="170" fill="none" stroke="#8dbbff" strokeWidth="1.5" pathLength={1} strokeDasharray="1" strokeDashoffset={1 - ringIn} />
+      </svg>
+      <div className="orbit-core" style={{ left: cx, top: cy, transform: `translate(-50%, -50%) scale(${pop(t, 104.3)})` }}>
+        <svg width="76" height="76" viewBox="0 0 64 64"><path d="M16 60V28a16 16 0 0 1 32 0v32" fill="none" stroke="#fff" strokeWidth="9" /><circle cx="32" cy="28" r="5.5" fill="#fff" /></svg>
+      </div>
+      {TIDE.map((label, i) => {
+        const a = ((spinA + i * 90) * Math.PI) / 180;
+        return (
+          <div key={label} className={`pill orbit-pill ${i === 3 ? "dark" : ""}`} style={{ left: cx + 300 * Math.cos(a), top: cy + 170 * Math.sin(a), transform: `translate(-50%, -50%) scale(${pop(t, 104.6 + i * 0.3)})`, opacity: clamp(prog(t, 104.6 + i * 0.3, 0.15)) }}>
+            <i />{label}
+          </div>
+        );
+      })}
+      {STACK.map((icon, i) => {
+        const a = ((spinB + i * (360 / STACK.length)) * Math.PI) / 180;
+        const depth = (Math.sin(a) + 1) / 2; // front of the ellipse is bigger
+        return (
+          <div key={icon.slug} className="orbit-logo" style={{ left: cx + 600 * Math.cos(a), top: cy + 330 * Math.sin(a), transform: `translate(-50%, -50%) scale(${pop(t, 105.0 + i * 0.12) * (0.82 + depth * 0.3)})`, opacity: clamp(prog(t, 105.0 + i * 0.12, 0.15)), zIndex: Math.round(depth * 10) }}>
+            <svg viewBox="0 0 24 24" width="44" height="44"><path d={icon.path} fill={`#${icon.hex}`} /></svg>
+            <span>{icon.title}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 // ---------- the film ----------
 const ACC_DARK = "#8dbbff";
 const ACC_LIGHT = "#3d8bff";
@@ -219,10 +282,14 @@ function Frame({ t }: { t: number }) {
               transform: `perspective(2200px) translate(${(1 - uiIn) * 80}px, ${Math.sin(t * 0.6) * 6}px) rotateY(${-11 + Math.sin(t * 0.25) * 1.5}deg) rotateX(${4}deg) scale(${0.94 + 0.06 * uiIn})`,
             }}
           >
-            <Clip src="/film/ui.mp4" at={(x) => { const w = UI_WINDOWS.find(([a, b]) => x >= a && x < b); return w ? w[2] + (x - w[0]) * w[3] : x < 53.3 ? 0.8 : null; }} className="ui-video" />
+            <Clip
+              src="/film/ui.mp4"
+              at={(x) => { const w = UI_WINDOWS.find(([a, b]) => x >= a && x < b); return w ? w[2] + (x - w[0]) * w[3] : x < 53.3 ? 0.8 : null; }}
+              className="ui-video"
+              style={{ transform: `scale(${win ? win[4] : 1.42})` }}
+            />
             <div className="ui-flash" style={{ opacity: flash * 0.7 }} />
           </div>
-          {win && null}
         </div>
       )}
 
@@ -309,31 +376,30 @@ function Frame({ t }: { t: number }) {
         {/* v14 */}
         <Kinetic t={t} at={92.9} out={95.5} text="Survivors stop choosing between *help* and *hiding.*" size={84} className="center dark wide" accent={ACC_LIGHT} />
         <Kinetic t={t} at={95.6} out={98.4} text="Services stop being *the* *leak.*" size={96} className="center dark" accent={ACC_LIGHT} />
-        {/* v15 */}
-        <Eyebrow t={t} at={98.9} out={103.9} style={{ left: 0, right: 0, top: 300, textAlign: "center" }}>What we built, and tested</Eyebrow>
+        {/* v15 · what we built: numbers with the real cast and devices */}
+        <Eyebrow t={t} at={98.9} out={103.9} style={{ left: 0, right: 0, top: 250, textAlign: "center" }}>What we built, and tested</Eyebrow>
         {t >= 99.0 && t < 104.6 && (
           <div className="built" style={{ opacity: 1 - eio(prog(t, 103.9, 0.5)) }}>
-            {[
-              { v: 7, l: "people" },
-              { v: 8, l: "scenes, end to end" },
-              { v: 15, l: "Tide operations" },
-              { v: 0, l: "plaintext addresses" },
-            ].map((s, i) => (
+            {BUILT.map((s, i) => (
               <div key={s.l} className="built-cell">
+                <div className="built-art">
+                  {s.art.map((a, k) => (
+                    <span key={k} className="built-chip" style={{ transform: `scale(${pop(t, 99.1 + i * 0.4 + k * 0.07)})`, opacity: clamp(prog(t, 99.1 + i * 0.4 + k * 0.07, 0.15)) }}>
+                      {a}
+                    </span>
+                  ))}
+                </div>
                 <Count t={t} at={99.2 + i * 0.4} out={200} value={s.v} size={140} style={{ position: "static" }} />
                 <Kinetic t={t} at={99.5 + i * 0.4} out={200} text={s.l} size={30} className="dark" />
               </div>
             ))}
           </div>
         )}
-        <Kinetic t={t} at={104.2} out={110.3} text="*Thanks* *to*" size={72} className="center dark thanks" accent="#000" />
-        <div className="thanks-row">
-          <Pill t={t} at={104.6} out={110.3}>TideCloak</Pill>
-          <Pill t={t} at={104.9} out={110.3}>Hermetic E2EE</Pill>
-          <Pill t={t} at={105.2} out={110.3}>Quorum-Enforced Governance</Pill>
-          <Pill t={t} at={105.5} out={110.3} dark>Tide Fabric · Emergent Authority</Pill>
-        </div>
-        <Kinetic t={t} at={106.4} out={110.3} text="no one ever holds the master key." size={40} className="center dark thanks-sub" />
+
+        {/* thanks to: the Tide ecosystem in the inner ring, the open stack orbiting outside */}
+        <Kinetic t={t} at={104.2} out={110.3} text="*Thanks* *to*" size={76} className="center dark thanks" accent="#000" />
+        {t >= 104.1 && t < 110.9 && <Orbit t={t} />}
+        <Kinetic t={t} at={106.4} out={110.3} text="no one ever holds the master key." size={38} className="center dark thanks-sub" />
 
         {/* v16 · end card */}
         {t >= 110.9 && (

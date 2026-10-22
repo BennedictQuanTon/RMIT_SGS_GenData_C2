@@ -33,9 +33,11 @@ export interface LiveInfo {
 function LiveBridge({ children }: { children: Parameters<typeof LiveRoot>[0]["children"] }) {
   const tc = useTideCloak();
   const username: string | null = tc.authenticated ? tc.getValueFromIdToken("preferred_username") ?? tc.getValueFromToken("preferred_username") ?? null : null;
+  // A realm user named after a persona starts on that persona's screen; screens can still be switched,
+  // and every Tide call runs as the signed-in identity.
   const fromToken = ACTORS.find((a) => a.id === username)?.id;
-  const [picked, setPicked] = useState<ActorId>("linh");
-  const current = fromToken ?? picked;
+  const [picked, setPicked] = useState<ActorId | null>(null);
+  const current = picked ?? fromToken ?? "linh";
 
   const fabric = useMemo<Fabric>(
     () => ({

@@ -269,7 +269,7 @@ function Shell({ live }: { live?: LiveInfo }) {
       <motion.header className="topbar" initial={{ y: -16, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.6, ease: ease.out, delay: EMBED ? 0 : 0.35 }}>
         <div className="topbar-inner">
           {!EMBED && <Brand to="/" sfx="whoosh" />}
-          {live ? (
+          {live && (
             <div className="row">
               <span className="muted" style={{ fontSize: 13 }}>{live.authenticated ? `Signed in as ${live.username}` : live.initializing ? "Connecting to TideCloak…" : "Not signed in"}</span>
               {live.authenticated ? (
@@ -278,7 +278,8 @@ function Shell({ live }: { live?: LiveInfo }) {
                 <button className="btn sm" onClick={live.login}>Sign in with Tide</button>
               )}
             </div>
-          ) : (
+          )}
+          {(
             <LayoutGroup id="personas">
               <nav className="personas" aria-label="Act as">
                 {ACTORS.map((a, i) => (

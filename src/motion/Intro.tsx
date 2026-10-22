@@ -112,7 +112,7 @@ export function Intro({ onDone }: { onDone: () => void }) {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.8 }}
             >
-              Be reached, not found.
+              <span className="intro-tag-a">Be reached,</span> <span className="intro-tag-b">not found.</span>
             </motion.span>
           </motion.div>
         </motion.div>
