@@ -16,6 +16,7 @@ import { Approver } from "./screens/Approver";
 import { Police } from "./screens/Police";
 import { Service } from "./screens/Service";
 import { Survivor } from "./screens/Survivor";
+import { Gate } from "./Gate";
 
 const PERSONA_KEY = storageKey("unfound-demo-persona");
 
@@ -442,21 +443,58 @@ function MockDemo() {
   );
 }
 
-// Live mode turns on when public/tidecloak.json exists and VITE_UNFOUND_MODE is not "mock".
-// The embedded copy on the landing page always runs on the mock fabric.
-export function Demo() {
-  const [mode, setMode] = useState<"checking" | "mock" | "live">(import.meta.env.VITE_UNFOUND_MODE === "mock" || EMBED ? "mock" : "checking");
-  useEffect(() => {
-    if (mode !== "checking") return;
-    fetch("/tidecloak.json", { cache: "no-store" })
-      .then(async (r) => {
-        const ok = r.ok && (r.headers.get("content-type") ?? "").includes("json");
-        setMode(ok ? "live" : "mock");
-      })
-      .catch(() => setMode("mock"));
-  }, [mode]);
+// /demo opens on a welcome gate: sign in with Tide (live) or explore on the mock fabric.
+// ?story, ?embed, ?clean and ?mode=live|mock skip the gate; returning from the Tide sign-in
+// (/auth/redirect, or a remembered choice) goes straight back to live.
+const MODE_KEY = "unfound-demo-mode";
 
-  if (mode === "checking") return null;
+export function Demo() {
+  const params = new URLSearchParams(window.location.search);
+  const remembered = (() => {
+    try {
+      return sessionStorage.getItem(MODE_KEY);
+    } catch {
+      return null;
+    }
+  })();
+  const initial: "gate" | "mock" | "live" =
+    EMBED || CLEAN || params.has("story") || params.get("mode") === "mock" || import.meta.env.VITE_UNFOUND_MODE === "mock"
+      ? "mock"
+      : params.get("mode") === "live" || window.location.pathname === "/auth/redirect" || remembered === "live"
+        ? "live"
+        : "gate";
+  const [mode, setMode] = useState(initial);
+  const [liveReady, setLiveReady] = useState(false);
+
+  useEffect(() => {
+    fetch("/tidecloak.json", { cache: "no-store" })
+      .then((r) => (r.ok && (r.headers.get("content-type") ?? "").includes("json") ? r.json() : null))
+      .then((cfg) => setLiveReady(!!cfg && !!(cfg.realm || cfg["auth-server-url"])))
+      .catch(() => setLiveReady(false));
+  }, []);
+
+  const choose = (m: "mock" | "live") => {
+    try {
+      sessionStorage.setItem(MODE_KEY, m);
+    } catch {
+      /* ignore */
+    }
+    setMode(m);
+  };
+
+  if (mode === "gate") {
+    return (
+      <Gate
+        liveReady={liveReady}
+        onLive={() => choose("live")}
+        onMock={() => choose("mock")}
+        onStory={() => {
+          window.history.replaceState(null, "", "/demo?story=1");
+          choose("mock");
+        }}
+      />
+    );
+  }
   if (mode === "mock") return <MockDemo />;
   return (
     <LiveRoot>
