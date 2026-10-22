@@ -185,7 +185,7 @@ const STACK = [siKeycloak, siOpenid, siJsonwebtokens, siReact, siTypescript, siV
 const TIDE = ["TideCloak", "Hermetic E2EE", "Quorum governance", "Tide Fabric"];
 
 function Orbit({ t }: { t: number }) {
-  const cx = 960, cy = 575;
+  const cx = 960, cy = 552;
   const out = eio(prog(t, 110.2, 0.6));
   const ringIn = eio(prog(t, 104.3, 1.0));
   const spinA = -(t - 104) * 9; // Tide ring, slow, counter-clockwise

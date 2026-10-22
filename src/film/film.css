@@ -58,7 +58,7 @@ html.film-mode, html.film-mode body { margin: 0; background: #000; overflow: hid
 .k.thanks { top: 110px; transform: none; }
 .thanks-row { position: absolute; left: 0; right: 0; top: 52%; display: flex; justify-content: center; gap: 18px; }
 .thanks-row .pill { position: static; }
-.k.thanks-sub { top: 1000px; transform: none; color: #3a3a3a; font-weight: 500; }
+.k.thanks-sub { top: 1018px; transform: none; color: #3a3a3a; font-weight: 500; }
 
 .built { top: 330px; }
 .built-art { display: flex; justify-content: center; align-items: center; height: 70px; margin-bottom: 6px; }

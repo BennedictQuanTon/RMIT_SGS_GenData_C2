@@ -22,6 +22,16 @@ When the initializer prints `ACTION REQUIRED: Open this URL and complete Tide en
 
 The initializer registers `http://localhost:3000` as the client URL, which is the port `npm run dev` uses here.
 
+## Shortcut
+
+After the initializer and your Tide enrolment have finished, one command does steps 1 (copy) and 2–3 (roles):
+
+```bash
+node tools/tide-setup.mjs ~/tide-setup/unfound-realm nextjs-test
+```
+
+It copies `tidecloak.json` into `public/`, creates the six `_tide_addr*` roles and assigns them to every user in the realm. With Quorum-Enforced Governance on, approve the resulting change set in the admin console.
+
 ## 2. Roles (realm roles)
 
 | Role | Purpose |

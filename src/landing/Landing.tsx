@@ -9,7 +9,6 @@ import { WhoSees } from "./WhoSees";
 import { Stack } from "./Stack";
 import { Prototype } from "./Prototype";
 import { Approach } from "./Approach";
-import { Film } from "./Film";
 import { Compare, References } from "./Compare";
 import { Team } from "./Team";
 import { CountUp, Reveal, ScrollWords, Words } from "../motion/primitives";
@@ -224,7 +223,6 @@ export function Landing() {
         </section>
 
         <Approach />
-        <Film />
         <Showcase />
         <WhoSees />
         <Stack />

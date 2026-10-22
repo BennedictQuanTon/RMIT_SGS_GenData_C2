@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import { Reveal, Words } from "../motion/primitives";
 import { ease } from "../motion/tokens";
+import { FilmPlayer } from "./Film";
 
 // How Unfound uses the Tide ecosystem: who talks to whom, and where the authority actually lives.
 type Node = { id: string; x: number; y: number; w: number; title: string; sub: string; dark?: boolean };
@@ -121,6 +122,8 @@ export function Approach() {
             </p>
           </Reveal>
         </div>
+
+        <FilmPlayer />
 
         <Reveal className="ap-figure">
           <Diagram />

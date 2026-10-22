@@ -601,3 +601,10 @@ html.lenis, html.lenis body { height: auto; }
 .app.clean .workspace { grid-template-columns: 1fr; }
 .app.clean .stage { background: #fff; padding: 36px 24px; min-height: 100vh; align-content: center; }
 .app.clean .callout { bottom: 48px; }
+
+.ap-figure { margin-top: 56px; }
+.film-frame { margin-top: 8px; }
+.film-inner { position: relative; width: 100%; height: 100%; }
+.film-sound { position: absolute; right: 18px; bottom: 18px; display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border: 0; border-radius: 999px; background: rgba(0, 0, 0, 0.62); color: #fff; font: 500 14px var(--font-ui); cursor: pointer; backdrop-filter: blur(8px); transition: background 0.2s ease, transform 0.12s ease; }
+.film-sound:hover { background: rgba(0, 0, 0, 0.8); }
+.film-sound:active { transform: scale(0.96); }
