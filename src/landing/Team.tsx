@@ -4,11 +4,11 @@ import { ease } from "../motion/tokens";
 
 const SCHOOLS = ["Ho Chi Minh City University of Technology (HCMUT)", "University of Technology Sydney (UTS)"];
 
-const TEAM: { name: string; role: string; lead?: boolean; photo?: string }[] = [
-  { name: "Long Quan Ton", role: "AI Engineer", lead: true, photo: "/team/long-quan-ton.jpg" },
-  { name: "Thanh Loi Tran", role: "ML Engineer" },
-  { name: "Huu Nhan Nguyen", role: "Data Scientist" },
-  { name: "Vo Di Luan Dang", role: "Backend Engineer" },
+const TEAM: { name: string; role: string; photo: string }[] = [
+  { name: "Long Quan Ton", role: "AI Engineer", photo: "/team/long-quan-ton.jpg" },
+  { name: "Thanh Loi Tran", role: "ML Engineer", photo: "/team/thanh-loi-tran.jpg" },
+  { name: "Huu Nhan Nguyen", role: "Backend Engineer", photo: "/team/huu-nhan-nguyen.jpg" },
+  { name: "Vo Di Luan Dang", role: "Data Scientist", photo: "/team/vo-di-luan-dang.jpg" },
 ];
 
 export function Team() {
@@ -28,9 +28,8 @@ export function Team() {
               viewport={{ once: true, amount: 0.4 }}
               transition={{ duration: 0.7, ease: ease.out, delay: i * 0.08 }}
             >
-              <div className="team-photo">{m.photo ? <img src={m.photo} alt={`Portrait of ${m.name}`} loading="lazy" /> : null}</div>
+              <div className="team-photo"><img src={m.photo} alt={`Portrait of ${m.name}`} loading="lazy" /></div>
               <div className="team-body">
-                {m.lead && <span className="eyebrow">Team Lead</span>}
                 <h3>{m.name}</h3>
                 <span className="team-role">{m.role}</span>
                 <ul className="team-schools">

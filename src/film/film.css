@@ -1,0 +1,60 @@
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&display=swap");
+
+html.film-mode, html.film-mode body { margin: 0; background: #000; overflow: hidden; }
+.film-root { width: 1920px; height: 1080px; position: relative; overflow: hidden; background: #000; font-family: "Geist", "Inter", sans-serif; }
+.film-stage { position: absolute; inset: 0; }
+.layer { position: absolute; inset: 0; overflow: hidden; }
+.bg-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.bg-video.blurred { filter: blur(22px) saturate(0.6); opacity: 0.35; transform: scale(1.15); }
+.shade-a { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.5)); }
+.dark-base { background: #05060a; }
+.shade-b { position: absolute; inset: 0; background: rgba(4, 6, 14, 1); mix-blend-mode: normal; }
+.navy-glow { position: absolute; width: 1400px; height: 900px; left: 260px; top: 300px; border-radius: 50%; background: radial-gradient(closest-side, rgba(40, 70, 170, 0.35), transparent); }
+.light-base { background: #f6f8fd; }
+.lam-glow { position: absolute; border-radius: 50%; filter: blur(40px); }
+.lam-glow.g1 { width: 1100px; height: 800px; left: -200px; top: 520px; background: radial-gradient(closest-side, rgba(141, 187, 255, 0.55), transparent); }
+.lam-glow.g2 { width: 1000px; height: 760px; right: -240px; top: -200px; background: radial-gradient(closest-side, rgba(61, 139, 255, 0.28), transparent); }
+.veil { position: absolute; inset: 0; background: rgba(246, 248, 253, 0.72); }
+
+.ui-frame { position: absolute; right: 70px; top: 214px; width: 1060px; aspect-ratio: 1920 / 1160; border-radius: 22px; overflow: hidden; background: #fff; box-shadow: 0 60px 120px -40px rgba(20, 40, 110, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.06); transform-origin: 60% 50%; }
+.ui-video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ui-flash { position: absolute; inset: 0; background: #fff; pointer-events: none; }
+
+.type { position: absolute; inset: 0; pointer-events: none; }
+.k { display: flex; flex-wrap: wrap; font-weight: 600; letter-spacing: -0.025em; line-height: 1.08; }
+.k span { display: inline-block; will-change: transform, filter, opacity; white-space: pre; }
+.k .acc { font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-weight: 400; letter-spacing: -0.01em; }
+.k.light { color: #fff; text-shadow: 0 2px 30px rgba(0, 0, 0, 0.35); }
+.k.dark { color: #000; }
+.k.center { position: absolute; left: 160px; right: 160px; top: 50%; transform: translateY(-50%); justify-content: center; text-align: center; }
+.k.center.wide { left: 220px; right: 220px; }
+.k.center.up { top: 34%; }
+.k.center.down { top: 66%; }
+.k.center.under { top: 66%; font-weight: 500; letter-spacing: -0.01em; }
+.stack-left { position: absolute; left: 160px; top: 50%; transform: translateY(-50%); display: grid; gap: 4px; }
+.count { position: absolute; left: 0; right: 0; text-align: center; color: #fff; font-weight: 600; letter-spacing: -0.04em; line-height: 1; font-variant-numeric: tabular-nums; }
+.src { position: absolute; left: 80px; bottom: 60px; font: 500 15px/1 "Geist", sans-serif; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255, 255, 255, 0.6); }
+
+.logo { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 18px; }
+.logo .k { position: static; justify-content: center; }
+.logo .word { color: #000; letter-spacing: -0.045em; }
+.logo .slogan { color: #000; font-weight: 500; letter-spacing: -0.01em; }
+.logo .credit { color: #6e6e6e; font-weight: 500; letter-spacing: 0.04em; margin-top: 20px; }
+
+.left-col { position: absolute; left: 110px; top: 0; bottom: 0; width: 700px; }
+.left-col .k { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%); }
+.eb { position: absolute; top: calc(50% - 170px); left: 0; font: 600 16px/1 "Geist", sans-serif; letter-spacing: 0.18em; text-transform: uppercase; color: #6e6e6e; }
+
+.pill { position: absolute; display: inline-flex; align-items: center; gap: 12px; padding: 14px 22px; border-radius: 999px; background: rgba(255, 255, 255, 0.92); color: #000; font: 500 24px/1 "Geist", sans-serif; letter-spacing: -0.01em; box-shadow: 0 20px 50px -20px rgba(20, 40, 110, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.05); white-space: nowrap; transform-origin: center; }
+.pill i { width: 12px; height: 12px; border-radius: 50%; background: #3d8bff; box-shadow: 0 0 0 5px rgba(61, 139, 255, 0.18); }
+.pill.dark { background: #000; color: #fff; }
+.pill.dark i { background: #8dbbff; }
+
+.built { position: absolute; left: 160px; right: 160px; top: 380px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; }
+.built-cell { display: grid; justify-items: center; gap: 10px; }
+.built-cell .count { color: #000; }
+.built-cell .k { justify-content: center; color: #6e6e6e; font-weight: 500; }
+.k.thanks { top: 36%; }
+.thanks-row { position: absolute; left: 0; right: 0; top: 52%; display: flex; justify-content: center; gap: 18px; }
+.thanks-row .pill { position: static; }
+.k.thanks-sub { top: 70%; color: #6e6e6e; font-weight: 500; }

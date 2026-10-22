@@ -10,6 +10,7 @@ import { useGlobalSfx } from "./motion/sfx";
 // so the curtain never waits on the network.
 const loadDemo = () => import("./demo/Demo");
 const Demo = lazy(() => loadDemo().then((m) => ({ default: m.Demo })));
+const FilmPage = lazy(() => import("./film/Film").then((m) => ({ default: m.Film })));
 
 function Page({ children }: { children: ReactNode }) {
   // The page itself stays put; the curtain does the moving. Exit waits for the curtain to cover.
@@ -42,6 +43,7 @@ function BootCurtain() {
 function AnimatedRoutes() {
   const location = useLocation();
   const [boot] = useState(() => location.pathname !== "/" && !location.pathname.startsWith("/film") && !new URLSearchParams(location.search).has("embed"));
+  if (location.pathname === "/film") return <Suspense fallback={null}><FilmPage /></Suspense>;
   return (
     <>
     {boot && <BootCurtain />}
