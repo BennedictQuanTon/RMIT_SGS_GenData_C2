@@ -41,7 +41,7 @@ export function FilmPlayer() {
         {has && <video ref={video} src={SRC} muted playsInline loop preload="metadata" />}
         {has && (
           <button className="film-sound" data-sfx="none" onClick={toggle} aria-pressed={!muted} aria-label={muted ? "Turn sound on" : "Turn sound off"}>
-            <svg width="20" height="20" viewBox="0 0 16 16" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 16 16" aria-hidden="true">
               <path d="M2 6h3l4-3v10l-4-3H2z" fill="currentColor" />
               {muted ? (
                 <path d="M11 6l4 4M15 6l-4 4" stroke="currentColor" strokeWidth="1.4" />
@@ -49,7 +49,6 @@ export function FilmPlayer() {
                 <path d="M11 5.5a3.5 3.5 0 0 1 0 5M12.8 3.8a6 6 0 0 1 0 8.4" fill="none" stroke="currentColor" strokeWidth="1.4" />
               )}
             </svg>
-            <span>{muted ? "Sound on" : "Sound off"}</span>
           </button>
         )}
       </div>

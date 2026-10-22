@@ -623,22 +623,27 @@ html.lenis, html.lenis body { height: auto; }
 .gate-center h1 em { font: italic 400 1em/1 "Instrument Serif", Georgia, serif; color: var(--color-lam); letter-spacing: -0.01em; }
 .gate-center > p { font-size: 19px; color: var(--color-graphite); max-width: 520px; }
 .gate-choices { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; width: 100%; margin-top: 18px; }
-.gate-choice { position: relative; display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: start; text-align: left; padding: 24px 24px 26px; border-radius: 18px; border: 0.5px solid var(--color-rail); background: rgba(255, 255, 255, 0.92); color: var(--color-obsidian); cursor: pointer; box-shadow: 0 24px 60px -32px rgba(20, 40, 110, 0.45); transition: transform 0.25s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.25s ease; font: inherit; }
-.gate-choice:hover:not(:disabled) { transform: translateY(-4px); box-shadow: 0 30px 70px -30px rgba(20, 40, 110, 0.55); }
-.gate-choice:active:not(:disabled) { transform: scale(0.98); }
-.gate-choice.dark { background: linear-gradient(180deg, #191919, #000); color: #fff; border-color: #000; }
-.gate-choice:disabled { cursor: not-allowed; opacity: 0.55; }
-.gate-icon { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 14px; background: var(--color-periwinkle-wash); color: var(--color-lam); }
-.gate-choice.dark .gate-icon { background: rgba(141, 187, 255, 0.16); color: #8dbbff; }
-.gate-text { display: grid; gap: 6px; padding-bottom: 18px; }
-.gate-text b { font: 600 22px/1.2 var(--font-display); letter-spacing: -0.02em; }
-.gate-text span { font-size: 14px; line-height: 1.45; color: var(--color-graphite); }
-.gate-choice.dark .gate-text span { color: #b9b9b9; }
-.gate-tag { position: absolute; bottom: 18px; right: 18px; font: 600 10px/1 var(--font-display); letter-spacing: 0.14em; text-transform: uppercase; padding: 6px 9px; border-radius: 999px; background: var(--color-fog); color: var(--color-graphite); }
-.gate-choice.dark .gate-tag { background: #8dbbff; color: #000; }
-.gate-story { display: inline-flex; align-items: center; gap: 8px; border: 0; background: none; font: 500 15px var(--font-ui); color: var(--color-obsidian); cursor: pointer; padding: 8px 12px; border-radius: 999px; }
+.gate-choice { display: inline-flex; align-items: center; justify-content: center; gap: 16px; height: 88px; padding: 0 28px; border-radius: 22px; border: 0.5px solid var(--color-rail); background: rgba(255, 255, 255, 0.95); color: var(--color-obsidian); cursor: pointer; box-shadow: 0 24px 60px -30px rgba(20, 40, 110, 0.45); font: inherit; }
+.gate-choice b { font: 600 24px/1 var(--font-display); letter-spacing: -0.02em; white-space: nowrap; }
+.gate-choice.dark { background: linear-gradient(180deg, #1c1c1c, #000); color: #fff; border-color: #000; }
+.gate-choice:disabled { cursor: not-allowed; opacity: 0.4; }
+.gate-icon { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; background: var(--color-periwinkle-wash); }
+.gate-choice.dark .gate-icon { background: rgba(255, 255, 255, 0.1); }
+.gate-icon.faces { display: flex; width: auto; padding: 0 8px; background: transparent; }
+.gate-icon.faces img { box-shadow: 0 0 0 2px #fff; }
+.gate-icon.faces img + img { margin-left: -10px; }
+.gate-story { display: inline-flex; align-items: center; gap: 8px; border: 0; background: none; font: 500 16px var(--font-ui); margin-top: 6px; color: var(--color-obsidian); cursor: pointer; padding: 8px 12px; border-radius: 999px; }
 .gate-story:hover { background: rgba(0, 0, 0, 0.05); }
 @media (max-width: 760px) {
   .gate-choices { grid-template-columns: 1fr; }
   .gate-stage { display: none; }
 }
+
+.iris { position: fixed; inset: 0; z-index: 120; display: grid; place-items: center; overflow: hidden; }
+.iris-disc { position: absolute; border-radius: 50%; will-change: transform; }
+.iris-disc.grow { transform: scale(0); animation: iris-grow 0.62s cubic-bezier(0.65, 0, 0.35, 1) forwards; }
+.iris-disc.shrink { transform: scale(1); animation: iris-shrink 0.72s cubic-bezier(0.65, 0, 0.35, 1) forwards; }
+@keyframes iris-grow { from { transform: scale(0); } to { transform: scale(1); } }
+@keyframes iris-shrink { from { transform: scale(1); } to { transform: scale(0); } }
+.iris-mark { position: relative; z-index: 1; display: grid; }
+.film-sound { width: 48px; height: 48px; padding: 0; justify-content: center; }

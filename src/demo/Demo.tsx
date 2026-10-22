@@ -16,7 +16,7 @@ import { Approver } from "./screens/Approver";
 import { Police } from "./screens/Police";
 import { Service } from "./screens/Service";
 import { Survivor } from "./screens/Survivor";
-import { Gate } from "./Gate";
+import { Gate, IrisOut, type Iris } from "./Gate";
 
 const PERSONA_KEY = storageKey("unfound-demo-persona");
 
@@ -473,12 +473,14 @@ export function Demo() {
       .catch(() => setLiveReady(false));
   }, []);
 
-  const choose = (m: "mock" | "live") => {
+  const [iris, setIris] = useState<Iris | null>(null);
+  const choose = (m: "mock" | "live", i?: Iris) => {
     try {
       sessionStorage.setItem(MODE_KEY, m);
     } catch {
       /* ignore */
     }
+    if (i) setIris(i);
     setMode(m);
   };
 
@@ -486,17 +488,20 @@ export function Demo() {
     return (
       <Gate
         liveReady={liveReady}
-        onLive={() => choose("live")}
-        onMock={() => choose("mock")}
-        onStory={() => {
+        onLive={(i) => choose("live", i)}
+        onMock={(i) => choose("mock", i)}
+        onStory={(i) => {
           window.history.replaceState(null, "", "/demo?story=1");
-          choose("mock");
+          choose("mock", i);
         }}
       />
     );
   }
-  if (mode === "mock") return <MockDemo />;
+  const out = iris && <IrisOut key="iris" iris={iris} />;
+  if (mode === "mock") return <>{<MockDemo />}{out}</>;
   return (
+    <>
+    {out}
     <LiveRoot>
       {({ fabric, current, setCurrent, live }) => (
         <UnfoundProvider fabric={fabric} current={current} setCurrent={setCurrent}>
@@ -504,5 +509,6 @@ export function Demo() {
         </UnfoundProvider>
       )}
     </LiveRoot>
+    </>
   );
 }
